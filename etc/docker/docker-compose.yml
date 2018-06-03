@@ -1,0 +1,22 @@
+version: '2'
+services:
+  dev:
+    hostname: twitch-events
+    build:
+      context: ../..
+      dockerfile: etc/docker/Dockerfile
+    volumes:
+      - ../../src:/opt/app/src
+      - ../../static:/opt/app/static
+      - ../../tests/:/opt/app/tests
+    command: "/var/scripts/watch.sh"
+
+  test:
+    hostname: twitch-events
+    build:
+      context: ../..
+      dockerfile: etc/docker/Dockerfile
+    volumes:
+        - ../../src:/opt/app/src
+        - ../../tests/:/opt/app/tests
+    command: "/var/scripts/test.sh"
