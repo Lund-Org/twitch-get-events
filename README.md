@@ -26,13 +26,13 @@ For Docker users :
       npm run docker
 
       # If you're an Unix user and you don't have npm
-      docker-compose -f etc/docker/docker-compose.yml up dev
+      docker-compose -f etc/docker/docker-compose.yml up --build dev
 
       # If you're a Windows user and you have npm
       npm run windocker
 
       # If you're a Windows user and you don't have npm
-      docker-compose.exe -f etc/docker/docker-compose.yml up dev
+      docker-compose.exe -f etc/docker/docker-compose.yml up --build dev
 
 **[NOT TESTED YET]** For Node/Npm users :
 
@@ -41,21 +41,21 @@ For Docker users :
 
 ## Running the tests
 
-**[NOT TESTED YET]** For Docker users :
+For Docker users :
 
       # If you're an Unix user and you have npm
       npm run dockertest
 
       # If you're an Unix user and you don't have npm
-      docker-compose -f etc/docker/docker-compose.yml up test
+      docker-compose -f etc/docker/docker-compose.yml up --build test
 
       # If you're a Windows user and you have npm
       npm run windockertest
 
       # If you're a Windows user and you don't have npm
-      docker-compose.exe -f etc/docker/docker-compose.yml up test
+      docker-compose.exe -f etc/docker/docker-compose.yml up --build test
 
-**[NOT TESTED YET]** For Node/Npm users :
+For Node/Npm users :
 
       npm start test
 

@@ -10,7 +10,7 @@ services:
     volumes:
       - ../../src:/opt/app/src
       - ../../static:/opt/app/static
-      - ../../tests/:/opt/app/tests
+      - ../../test/:/opt/app/test
     command: "/var/scripts/watch.sh"
 
   test:
@@ -20,5 +20,6 @@ services:
       dockerfile: etc/docker/Dockerfile
     volumes:
         - ../../src:/opt/app/src
-        - ../../tests/:/opt/app/tests
+        - ../../static:/opt/app/static
+        - ../../test/:/opt/app/test
     command: "/var/scripts/test.sh"
