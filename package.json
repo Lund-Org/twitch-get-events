@@ -4,7 +4,10 @@
   "description": "Retrieve the events from a Twitch Channel",
   "main": "./static/app.js",
   "scripts": {
+    "docker": "docker-compose -f etc/docker/docker-compose.yml up dev",
+    "windocker": "docker-compose.exe -f etc/docker/docker-compose.yml up dev",
     "start": "node ./static/app.js",
+    "dev": "supervisor ./static/app.js",
     "lint": "eslint --ext .js src --ext .js test/specs",
     "build": "echo 'todo'",
     "pretest": "npm run lint",
@@ -13,7 +16,8 @@
   "author": "LundOrg",
   "license": "MIT",
   "dependencies": {
-    "babel-polyfill": "^6.26.0"
+    "babel-polyfill": "^6.26.0",
+    "puppeteer": "^1.4.0"
   },
   "devDependencies": {
     "chai": "^3.5.0",
@@ -26,7 +30,8 @@
     "eslint-plugin-standard": "^3.1.0",
     "hapi": "^17.5.1",
     "jsdoc": "3.5.5",
-    "mocha": "^3.2.0"
+    "mocha": "^3.2.0",
+    "supervisor": "^0.12.0"
   },
   "engines": {
     "node": ">= 9.11.0",
