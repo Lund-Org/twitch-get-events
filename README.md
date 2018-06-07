@@ -1,7 +1,7 @@
 # TwitchGetEvents
 The module to get the events of a Twitch channel ('cause there is no API for it)
 
-## Getting Started
+## :fast_forward: Getting Started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
@@ -10,7 +10,7 @@ These instructions will get you a copy of the project up and running on your loc
 You can find an example of http integration in the static folder.
 It's also what is launched when you test the module.
 
-### Prerequisites
+### :new: Prerequisites
 
 If you have **Docker**, you don't need anything on your computer.
 If you don't have Docker, you need `node >= 9` and `npm >= 6`
@@ -18,7 +18,7 @@ If you don't have Docker, you need `node >= 9` and `npm >= 6`
 - [Docker](https://www.docker.com/)
 - [Node & npm](https://nodejs.org/en/)
 
-### Installing
+### :arrow_forward: Installing
 
 For Docker users :
 
@@ -34,12 +34,14 @@ For Docker users :
       # If you're a Windows user and you don't have npm
       docker-compose.exe -f etc/docker/docker-compose.yml up --build dev
 
-**[NOT TESTED YET]** For Node/Npm users :
+For Node/Npm users :
 
       npm install
       npm start dev
 
-## Running the tests
+:warning: **CAREFUL, THE LOCAL MODE DOESN'T WORK ON WINDOWS** (puppeteer errors :sob: )
+
+## :arrows_counterclockwise: Running the tests
 
 For Docker users :
 
@@ -59,21 +61,21 @@ For Node/Npm users :
 
       npm start test
 
-## Deployment
+## :arrow_up: Deployment
 
 The package will be available on npm, need a link
 
-## Built With
+## :arrow_heading_down: Built With
 
 * [Puppeteer](https://github.com/GoogleChrome/puppeteer) - Headless Chrome Node API
 * [Hapi](https://github.com/hapijs/hapi) (for demo purpose) - Server Framework for Node.js
 
-## Contributing
+## :cool: Contributing
 
 Contact us to know how to contribute.
 **[Mail address or link missing]**
 
-## Versioning
+## :1234: Versioning
 
 We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
 
