@@ -37,7 +37,7 @@ For Docker users :
 For Node/Npm users :
 
       npm install
-      npm start dev
+      npm run dev
 
 :warning: **CAREFUL, THE LOCAL MODE DOESN'T WORK ON WINDOWS** (puppeteer errors :sob: )
 
@@ -59,7 +59,7 @@ For Docker users :
 
 For Node/Npm users :
 
-      npm start test
+      npm run test
 
 ## :arrow_up: Deployment
 
