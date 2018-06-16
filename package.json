@@ -16,6 +16,10 @@
     "windockertest": "docker-compose.exe -f etc/docker/docker-compose.yml up --build test"
   },
   "author": "LundOrg",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Lund-Org/twitch-get-events.git"
+  },
   "license": "MIT",
   "dependencies": {
     "babel-polyfill": "^6.26.0",

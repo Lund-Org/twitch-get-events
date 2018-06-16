@@ -1,4 +1,5 @@
 # TwitchGetEvents
+[![Build Status](https://travis-ci.org/Lund-Org/twitch-get-events.svg?branch=master)](https://travis-ci.org/Lund-Org/twitch-get-events)
 The module to get the events of a Twitch channel ('cause there is no API for it)
 
 ## :fast_forward: Getting Started

@@ -8,6 +8,7 @@ branches:
 stages:
   - tests
   - npm release
+    if: tag =~ /\d+\.\d+\.\d+/
 jobs:
   include:
     - stage: tests
@@ -16,7 +17,6 @@ jobs:
       script:
       - npm run test
     - stage: npm release
-      if: tag =~ /\d+\.\d+\.\d+/
       node_js: "7"
       script: echo "Deploying to npm ..."
       deploy:
