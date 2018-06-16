@@ -6,8 +6,8 @@ branches:
   only:
   - /\bv?(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:-[\da-z-]+(?:\.[\da-z-]+)*)?(?:\+[\da-z-]+(?:\.[\da-z-]+)*)?\b/
 stages:
-  - tests
-  - npm release
+  - name: tests
+  - name: npm release
     if: tag =~ /\d+\.\d+\.\d+/
 jobs:
   include:
