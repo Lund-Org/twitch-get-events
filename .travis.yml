@@ -8,7 +8,7 @@ branches:
 stages:
   - name: tests
   - name: npm release
-    if: tag =~ /\d+\.\d+\.\d+/
+    if: tag =~ /^\d+\.\d+\.\d+$/
 jobs:
   include:
     - stage: tests
