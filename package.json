@@ -1,6 +1,6 @@
 {
-  "name": "twitch-events",
-  "version": "0.1.0",
+  "name": "@lund-org/twitch-events",
+  "version": "0.0.1",
   "description": "Retrieve the events from a Twitch Channel",
   "main": "./static/app.js",
   "scripts": {
@@ -16,6 +16,13 @@
     "windockertest": "docker-compose.exe -f etc/docker/docker-compose.yml up --build test"
   },
   "author": "LundOrg",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Lund-Org/twitch-get-events.git"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "license": "MIT",
   "dependencies": {
     "babel-polyfill": "^6.26.0",

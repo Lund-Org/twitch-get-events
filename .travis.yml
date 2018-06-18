@@ -1,0 +1,27 @@
+language: node_js
+node_js:
+  - "10"
+  - "9"
+branches:
+  only:
+  - /\bv?(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)\.(?:0|[1-9]\d*)(?:-[\da-z-]+(?:\.[\da-z-]+)*)?(?:\+[\da-z-]+(?:\.[\da-z-]+)*)?\b/
+stages:
+  - name: tests
+  - name: npm release
+    if: tag =~ /^\d+\.\d+\.\d+$/
+jobs:
+  include:
+    - stage: tests
+      install:
+      - npm i
+      script:
+      - npm run test
+    - stage: npm release
+      node_js: "7"
+      script: echo "Deploying to npm ..."
+      deploy:
+        provider: npm
+        email: $NPM_EMAIL
+        api_key: $NPM_API_KEY
+        on:
+          tags: true
