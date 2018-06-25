@@ -51,6 +51,18 @@ describe('Public : TwitchEvent class validity tests', function () {
     const events = await twitchEvent.getGlobalEvents(true)
     testsEvents(events)
   })
+
+  it('Test Public: TwitchEvent.getPastEvents(3, false)', async function () {
+    this.timeout(5000)
+    const events = await twitchEvent.getPastEvents(3, false)
+    testsEvents(events)
+  })
+
+  it('Test Public: TwitchEvent.getPastEvents(3, true)', async function () {
+    this.timeout(15000)
+    const events = await twitchEvent.getPastEvents(3, true)
+    testsEvents(events)
+  })
 })
 
 describe('Private : TwitchEvent class validity tests', function () {
