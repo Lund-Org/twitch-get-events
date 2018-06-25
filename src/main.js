@@ -23,6 +23,17 @@ class TwitchEvent {
     return this._getEvents(`https://www.twitch.tv/${this.username}/events`, null, hasDescription)
   }
 
+
+  /**
+   * Method used to extract past events from twitch user.
+   * @param {null|number} [offset=null] - Representing the number of events needed.
+   * @param {boolean} [hasDescription=false] - Representing the event description extraction state.
+   * @returns {Array<object>} Representing the past events list.
+   */
+  getPastEvents (offset = null, hasDescription = false) {
+    return this._getEvents(`https://www.twitch.tv/${this.username}/events?filter=past`, offset, hasDescription)
+  }
+
   /**
    * Internal private method used to extract needed events.
    * @param {string} target - Representing the target url.
