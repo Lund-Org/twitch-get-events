@@ -1,3 +1,5 @@
+const puppeteer = require('puppeteer')
+
 /**
  * Class TwitchEvent.
  * @class TwitchEvent
@@ -7,7 +9,7 @@ class TwitchEvent {
    * Class constructor.
    * @param {string} username - The twitch username.
    */
-  constructor(username) {
+  constructor (username) {
     if (typeof username !== 'string') {
       throw new Error('Error while trying to instanciate TwitchEvent class, "username" parameter should be string.')
     }
@@ -60,7 +62,7 @@ class TwitchEvent {
     }
     return events
   }
-  
+
   /**
    * Internal private async method used to create new page and goto targeted url.
    * @param {Browser} browser - Representing the puppeteer browser instance.
