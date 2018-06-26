@@ -41,7 +41,7 @@ const twitchEvent = new TwitchEvent('lundprod')
 
 describe('Public : TwitchEvent class validity tests', function () {
   it('Test Public: TwitchEvent.getGlobalEvents(false)', async function () {
-    this.timeout(5000)
+    this.timeout(10000)
     const events = await twitchEvent.getGlobalEvents(false)
     testsEvents(events)
   })
@@ -66,7 +66,7 @@ describe('Private : TwitchEvent class validity tests', function () {
   }
 
   it('Test Private: TwitchEvent._getPage(browser, target)', async function () {
-    this.timeout(5000)
+    this.timeout(10000)
     const browser = await createBrowser()
     const page = await twitchEvent._getPage(browser, 'https://google.com')
     assert.isTrue(typeof page === 'object' && page.constructor.name === 'Page')
@@ -74,7 +74,7 @@ describe('Private : TwitchEvent class validity tests', function () {
   })
 
   it('Test Private: TwitchEvent._getDescriptions(browser, events)', async function () {
-    this.timeout(15000)
+    this.timeout(25000)
     const browser = await createBrowser()
     let events = await twitchEvent.getGlobalEvents(false)
     events = await twitchEvent._getDescriptions(browser, events)
@@ -84,7 +84,7 @@ describe('Private : TwitchEvent class validity tests', function () {
   })
 
   it('Test Private: TwitchEvent._extractDescription(page)', async function () {
-    this.timeout(10000)
+    this.timeout(25000)
     const browser = await createBrowser()
     let events = await twitchEvent.getGlobalEvents(false)
     if (events.length > 0) {
@@ -97,7 +97,7 @@ describe('Private : TwitchEvent class validity tests', function () {
   })
 
   it('Test Private: TwitchEvent._extractEvents(page, 3)', async function () {
-    this.timeout(10000)
+    this.timeout(25000)
     const browser = await createBrowser()
     const page = await twitchEvent._getPage(browser, 'https://www.twitch.tv/lundprod/events?filter=past')
     const events = await twitchEvent._extractEvents(page, 3)
