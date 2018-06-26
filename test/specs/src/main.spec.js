@@ -76,7 +76,7 @@ describe('Private : TwitchEvent class validity tests', function () {
   it('Test Private: TwitchEvent._getDescriptions(browser, events)', async function () {
     this.timeout(15000)
     const browser = await createBrowser()
-    let events = await twitchEvent.getPastEvents(3, false)
+    let events = await twitchEvent.getGlobalEvents(false)
     events = await twitchEvent._getDescriptions(browser, events)
     const errors = events.map((ev) => typeof ev.description === 'string')
     assert.isFalse(errors.includes(false))
@@ -86,11 +86,13 @@ describe('Private : TwitchEvent class validity tests', function () {
   it('Test Private: TwitchEvent._extractDescription(page)', async function () {
     this.timeout(10000)
     const browser = await createBrowser()
-    let events = await twitchEvent.getPastEvents(1, false)
-    const page = await twitchEvent._getPage(browser, events[0].link)
-    events[0].description = await twitchEvent._extractDescription(page)
-    const errors = events.map((ev) => typeof ev.description === 'string')
-    assert.isFalse(errors.includes(false))
+    let events = await twitchEvent.getGlobalEvents(false)
+    if (events.length > 0) {
+      const page = await twitchEvent._getPage(browser, events[0].link)
+      events[0].description = await twitchEvent._extractDescription(page)
+      const errors = events.map((ev) => typeof ev.description === 'string')
+      assert.isFalse(errors.includes(false))
+    }
     await browser.close()
   })
 
