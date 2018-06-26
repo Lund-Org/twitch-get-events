@@ -41,7 +41,7 @@ const twitchEvent = new TwitchEvent('lundprod')
 
 describe('Public : TwitchEvent class validity tests', function () {
   it('Test Public: TwitchEvent.getGlobalEvents(false)', async function () {
-    this.timeout(5000)
+    this.timeout(10000)
     const events = await twitchEvent.getGlobalEvents(false)
     testsEvents(events)
   })
@@ -53,13 +53,13 @@ describe('Public : TwitchEvent class validity tests', function () {
   })
 
   it('Test Public: TwitchEvent.getPastEvents(3, false)', async function () {
-    this.timeout(5000)
+    this.timeout(10000)
     const events = await twitchEvent.getPastEvents(3, false)
     testsEvents(events)
   })
 
   it('Test Public: TwitchEvent.getPastEvents(3, true)', async function () {
-    this.timeout(15000)
+    this.timeout(25000)
     const events = await twitchEvent.getPastEvents(3, true)
     testsEvents(events)
   })
@@ -78,7 +78,7 @@ describe('Private : TwitchEvent class validity tests', function () {
   }
 
   it('Test Private: TwitchEvent._getPage(browser, target)', async function () {
-    this.timeout(5000)
+    this.timeout(10000)
     const browser = await createBrowser()
     const page = await twitchEvent._getPage(browser, 'https://google.com')
     assert.isTrue(typeof page === 'object' && page.constructor.name === 'Page')
@@ -86,7 +86,7 @@ describe('Private : TwitchEvent class validity tests', function () {
   })
 
   it('Test Private: TwitchEvent._getDescriptions(browser, events)', async function () {
-    this.timeout(15000)
+    this.timeout(25000)
     const browser = await createBrowser()
     let events = await twitchEvent.getPastEvents(3, false)
     events = await twitchEvent._getDescriptions(browser, events)
@@ -96,7 +96,7 @@ describe('Private : TwitchEvent class validity tests', function () {
   })
 
   it('Test Private: TwitchEvent._extractDescription(page)', async function () {
-    this.timeout(10000)
+    this.timeout(25000)
     const browser = await createBrowser()
     let events = await twitchEvent.getPastEvents(1, false)
     const page = await twitchEvent._getPage(browser, events[0].link)
@@ -107,7 +107,7 @@ describe('Private : TwitchEvent class validity tests', function () {
   })
 
   it('Test Private: TwitchEvent._extractEvents(page, 3)', async function () {
-    this.timeout(10000)
+    this.timeout(25000)
     const browser = await createBrowser()
     const page = await twitchEvent._getPage(browser, 'https://www.twitch.tv/lundprod/events?filter=past')
     const events = await twitchEvent._extractEvents(page, 3)
