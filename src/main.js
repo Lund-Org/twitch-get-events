@@ -1,24 +1,17 @@
-const puppeteer = require('puppeteer')
-
+/**
+ * Class TwitchEvent.
+ * @class TwitchEvent
+ */
 class TwitchEvent {
-  async get () {
-    let ret = ''
-    try {
-      const browser = await puppeteer.launch({
-        args: [
-          '--no-sandbox',
-          '--disable-setuid-sandbox'
-        ]
-      })
-      const page = await browser.newPage()
-      await page.goto('https://google.com', { waitUntil: 'networkidle2' })
-      ret = await page.content()
-
-      await browser.close()
-    } catch (e) {
-      console.log(e)
+  /**
+   * Class constructor.
+   * @param {string} username - The twitch username.
+   */
+  constructor (username) {
+    if (typeof username !== 'string') {
+      throw new Error('Error while trying to instanciate TwitchEvent class, "username" parameter should be string.')
     }
-    return ret
+    this.username = username
   }
 }
 
