@@ -10,12 +10,12 @@ const server = new Hapi.Server(Object.assign({
   routes: { cors: true }
 }))
 
-let t = new TwitchEvents()
+let t = new TwitchEvents('test')
 
 server.route({
   method: 'GET',
   path: '/',
-  handler: t.get
+  handler: () => 'test'
 })
 
 server.start().then(() => {
