@@ -10,12 +10,15 @@ const server = new Hapi.Server(Object.assign({
   routes: { cors: true }
 }))
 
-let t = new TwitchEvents('test')
-
 server.route({
   method: 'GET',
-  path: '/',
-  handler: () => 'test'
+  path: '/{username}',
+  handler: async (request, handler) => {
+    const twitchEvent = await new TwitchEvents(encodeURIComponent(request.params.username))
+    const hasDescription = (typeof request.query.description !== 'undefined' && request.query.description.toLowerCase() === 'y')
+    const events = await twitchEvent.getGlobalEvents(hasDescription)
+    return events
+  }
 })
 
 server.start().then(() => {
