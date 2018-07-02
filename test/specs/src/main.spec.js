@@ -96,14 +96,27 @@ describe('Private : TwitchEvent class validity tests', function () {
   })
 
   it('Test Private: TwitchEvent._extractDescription(page)', async function () {
-    this.timeout(25000)
-    const browser = await createBrowser()
-    let events = await twitchEvent.getPastEvents(1, false)
-    const page = await twitchEvent._getPage(browser, events[0].link)
-    events[0].description = await twitchEvent._extractDescription(page)
+    // To reset it after
+    let previousGlobalDocument = global.document
+    // Because it's used in extractDescription
+    global.document = {
+      querySelector: () => {
+        return { innerText: 'Foobar' }
+      }
+    }
+    // Because we don't want to load a full page
+    let pageSimultor = {
+      evaluate: (method) => {
+        return method()
+      }
+    }
+    let events = [{ description: null }]
+
+    events[0].description = await twitchEvent._extractDescription(pageSimultor)
     const errors = events.map((ev) => typeof ev.description === 'string')
     assert.isFalse(errors.includes(false))
-    await browser.close()
+    // Reset
+    global.document = previousGlobalDocument
   })
 
   it('Test Private: TwitchEvent._extractEvents(page, 3)', async function () {

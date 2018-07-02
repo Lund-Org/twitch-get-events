@@ -127,9 +127,9 @@ class TwitchEvent {
   _extractDescription (page) {
     return page.evaluate(() => {
       const description = document.querySelector('.events-landing-collection__main-col')
-        ? document.querySelector('.events-landing-collection__main-col .tw-elevation-2 p span').innerText
-        : document.querySelector('.simplebar-scroll-content .tw-flex-grow-1 p span').innerText
-      return description || null
+        ? document.querySelector('.events-landing-collection__main-col .tw-elevation-2 p span').innerText || null
+        : document.querySelector('.simplebar-scroll-content .tw-flex-grow-1 p span').innerText || null
+      return description
     })
   }
 }
