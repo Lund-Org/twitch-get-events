@@ -13,7 +13,8 @@
     "pretest": "npm run lint",
     "test": "mocha",
     "dockertest": "docker-compose -f etc/docker/docker-compose.yml up --build test",
-    "windockertest": "docker-compose.exe -f etc/docker/docker-compose.yml up --build test"
+    "windockertest": "docker-compose.exe -f etc/docker/docker-compose.yml up --build test",
+    "doc": "./node_modules/.bin/jsdoc ./src -c ./.jsdoc.conf"
   },
   "author": "LundOrg",
   "repository": {

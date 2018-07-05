@@ -26,6 +26,16 @@ class TwitchEvent {
   }
 
   /**
+   * Method used to extract past events from twitch user.
+   * @param {null|number} [offset=null] - Representing the number of events needed.
+   * @param {boolean} [hasDescription=false] - Representing the event description extraction state.
+   * @returns {Array<object>} Representing the past events list.
+   */
+  getPastEvents (offset = null, hasDescription = false) {
+    return this._getEvents(`https://www.twitch.tv/${this.username}/events?filter=past`, offset, hasDescription)
+  }
+
+  /**
    * Internal private method used to extract needed events.
    * @param {string} target - Representing the target url.
    * @param {null|number} offset - Representing the number of events needed.
@@ -117,9 +127,9 @@ class TwitchEvent {
   _extractDescription (page) {
     return page.evaluate(() => {
       const description = document.querySelector('.events-landing-collection__main-col')
-        ? document.querySelector('.events-landing-collection__main-col .tw-elevation-2 p span').innerText
-        : document.querySelector('.simplebar-scroll-content .tw-flex-grow-1 p span').innerText
-      return description || null
+        ? document.querySelector('.events-landing-collection__main-col .tw-elevation-2 p span').innerText || null
+        : document.querySelector('.simplebar-scroll-content .tw-flex-grow-1 p span').innerText || null
+      return description
     })
   }
 }

@@ -51,6 +51,18 @@ describe('Public : TwitchEvent class validity tests', function () {
     const events = await twitchEvent.getGlobalEvents(true)
     testsEvents(events)
   })
+
+  it('Test Public: TwitchEvent.getPastEvents(3, false)', async function () {
+    this.timeout(10000)
+    const events = await twitchEvent.getPastEvents(3, false)
+    testsEvents(events)
+  })
+
+  it('Test Public: TwitchEvent.getPastEvents(3, true)', async function () {
+    this.timeout(25000)
+    const events = await twitchEvent.getPastEvents(3, true)
+    testsEvents(events)
+  })
 })
 
 describe('Private : TwitchEvent class validity tests', function () {
@@ -76,7 +88,7 @@ describe('Private : TwitchEvent class validity tests', function () {
   it('Test Private: TwitchEvent._getDescriptions(browser, events)', async function () {
     this.timeout(25000)
     const browser = await createBrowser()
-    let events = await twitchEvent.getGlobalEvents(false)
+    let events = await twitchEvent.getPastEvents(3, false)
     events = await twitchEvent._getDescriptions(browser, events)
     const errors = events.map((ev) => typeof ev.description === 'string')
     assert.isFalse(errors.includes(false))

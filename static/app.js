@@ -12,12 +12,26 @@ const server = new Hapi.Server(Object.assign({
 
 server.route({
   method: 'GET',
-  path: '/{username}',
+  path: '/global/{username}',
   handler: async (request, handler) => {
     const twitchEvent = await new TwitchEvents(encodeURIComponent(request.params.username))
-    const hasDescription = (typeof request.query.description !== 'undefined' && request.query.description.toLowerCase() === 'y')
-    const events = await twitchEvent.getGlobalEvents(hasDescription)
-    return events
+    return await twitchEvent.getGlobalEvents(
+      typeof request.query.description !== 'undefined' && request.query.description.toLowerCase() === 'y'
+    )
+  }
+})
+
+server.route({
+  method: 'GET',
+  path: '/past/{username}',
+  handler: async (request, handler) => {
+    const twitchEvent = await new TwitchEvents(encodeURIComponent(request.params.username))
+    return await twitchEvent.getPastEvents(
+      typeof request.query.offset === 'string' && request.query.offset.match(/[0-9]+/)
+        ? request.query.offset
+        : null,
+      typeof request.query.description !== 'undefined' && request.query.description.toLowerCase() === 'y'
+    )
   }
 })
 
