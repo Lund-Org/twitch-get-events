@@ -6,7 +6,7 @@ The module to get the events of a Twitch channel ('cause there is no API for it)
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
-**[Documentation link missing]**
+[Link to the documentation](https://lund-org.github.io/twitch-get-events/index.html)
 
 You can find an example of http integration in the static folder.
 It's also what is launched when you test the module.
@@ -74,7 +74,6 @@ The package will be available on npm, need a link
 ## :cool: Contributing
 
 Contact us to know how to contribute.
-**[Mail address or link missing]**
 
 ## :1234: Versioning
 
