@@ -1,4 +1,12 @@
-const puppeteer = require('puppeteer')
+const https = require('https')
+
+// Privates symbols declaration.
+const _getEvents = Symbol('getEvents')
+const _buildOptions = Symbol('buildOptions')
+const _buildData = Symbol('buildData')
+const _post = Symbol('post')
+const _handleResponse = Symbol('handleResponse')
+const _formatResponseAsEvents = Symbol('formatResponseAsEvents')
 
 /**
  * Class TwitchEvent.
@@ -7,130 +15,217 @@ const puppeteer = require('puppeteer')
 class TwitchEvent {
   /**
    * Class constructor.
+   * @param {string} clientId - The API twitch clientID.
    * @param {string} username - The twitch username.
    */
-  constructor (username) {
+  constructor (clientId, username) {
+    if (typeof clientId !== 'string') {
+      throw new Error('Error while trying to instanciate TwitchEvent class, "clientId" parameter should be string.')
+    }
     if (typeof username !== 'string') {
       throw new Error('Error while trying to instanciate TwitchEvent class, "username" parameter should be string.')
     }
+    this.clientId = clientId
     this.username = username
   }
 
   /**
    * Method used to extract globals events from twitch user.
    * @param {boolean} [hasDescription=false] - The event description extraction state.
-   * @returns {Array<object>} Representing the globals events list.
+   * @returns {Array} The globals events list.
    */
   getGlobalEvents (hasDescription = false) {
-    return this._getEvents(`https://www.twitch.tv/${this.username}/events`, null, hasDescription)
+    return this[_getEvents]('global', 100, hasDescription)
   }
 
   /**
    * Method used to extract past events from twitch user.
-   * @param {null|number} [offset=null] - Representing the number of events needed.
-   * @param {boolean} [hasDescription=false] - Representing the event description extraction state.
-   * @returns {Array<object>} Representing the past events list.
+   * @param {null|number} [offset=null] - The number of events needed.
+   * @param {boolean} [hasDescription=false] - The event description extraction state.
+   * @returns {Array} The past events list.
    */
   getPastEvents (offset = null, hasDescription = false) {
-    return this._getEvents(`https://www.twitch.tv/${this.username}/events?filter=past`, offset, hasDescription)
+    return this[_getEvents]('past', offset, hasDescription)
   }
 
   /**
-   * Internal private method used to extract needed events.
-   * @param {string} target - Representing the target url.
-   * @param {null|number} offset - Representing the number of events needed.
-   * @param {boolean} hasDescription - Representing the event description extraction state.
-   * @returns {Array<object>} Representing the events list.
+   * Internal private method used to get needed events.
+   * @private
+   * @param {string} type - The events type, can be "past" or "global".
+   * @param {null|number} offset - The number of events needed.
+   * @param {boolean} hasDescription - The event description extraction state.
+   * @returns {Array} The events list.
    */
-  async _getEvents (target, offset, hasDescription) {
-    let events
-
+  async [_getEvents] (type, offset, hasDescription) {
     try {
-      const browser = await puppeteer.launch({
-        headless: true,
-        args: [
-          '--no-sandbox',
-          '--disable-setuid-sandbox'
-        ]
-      })
-      const page = await this._getPage(browser, target)
-      events = await this._extractEvents(page, offset)
-      events = hasDescription ? await this._getDescriptions(browser, events) : events
-      await browser.close()
-    } catch (error) {
-      console.log(error)
+      offset = offset || 20
+
+      const limit = 100
+      let list = []
+      let count = new Number(offset)
+
+      let iterator
+      let options
+      let data
+      let requestResponse
+      let formatted
+
+      do {
+        // Work with iterator to select adjusted amount of events by request.
+        iterator = offset > limit ? limit : offset
+        iterator = iterator > count ? count : iterator
+        count = count - iterator
+
+        options = this[_buildOptions]()
+        data = this[_buildData](
+          type,
+          iterator,
+          list.length > 0 ? list[list.length - 1].startAt : null
+        )
+
+        requestResponse = await this[_post](options, data)
+        formatted = await this[_handleResponse](requestResponse)
+
+        list = list.concat(formatted)
+      } while (count !== 0)
+
+      return {
+        status: 'success',
+        data: list
+      }
+    } catch (err) {
+      console.error(err)
+      return {
+        status: 'error',
+        errors: err
+      }
     }
-    return events
   }
 
   /**
-   * Internal private async method used to create new page and goto targeted url.
-   * @param {Browser} browser - Representing the puppeteer browser instance.
-   * @param {string} target - Representing the target url.
-   * @returns {Page} Representing new page instance created by browser (puppeteer).
+   * Private method to build an option object to pass to the request (post).
+   * @private
+   * @returns {object} The builded options object.
    */
-  async _getPage (browser, target) {
-    const page = await browser.newPage()
-    await page.goto(target, { waitUntil: 'networkidle2' })
-    return page
-  }
-
-  /**
-   * Internal private async method used to assign description for each event.
-   * @param {Browser} browser - Representing the puppeteer browser instance.
-   * @param {Array<object>} events - Representing the events list.
-   * @returns {Array<object>} Representing the updated events list.
-   */
-  async _getDescriptions (browser, events) {
-    for (let i = 0; i < events.length; ++i) {
-      const page = await this._getPage(browser, events[i].link)
-      events[i].description = await this._extractDescription(page)
-      await page.close()
+  [_buildOptions] () {
+    return {
+      protocol: 'https:',
+      method: 'POST',
+      hostname: 'gql.twitch.tv',
+      path: '/gql',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'client-id': this.clientId
+      }
     }
-    return events
   }
 
   /**
-   * Internal private method used to extract events from "virtual page" (DOM scrapping).
-   * @param {Page} page - Representing puppeteer page instance.
-   * @param {null|number} offset - Representing the number of events needed.
-   * @returns {Promise<object>} - Representing events extract from events page.
+   * Private method to build an data object to pass to the request (post).
+   * @private
+   * @param {string} type - Event type, "past" or "global".
+   * @param {number} offset - Number of events needed.
+   * @param {null|date} [date=null] - The events date limit.
+   * @returns {object} The builded data object.
    */
-  _extractEvents (page, offset) {
-    return page.evaluate((offset) => {
-      let formatedEvents = []
-      const visibleEvents = document.querySelectorAll('.tw-c-background.tw-elevation-1 .tw-mg-x-2')
-      const selectedEvents = Array.from(visibleEvents).splice(0, offset || visibleEvents.length)
-      const innerSelector = (target, selector) => target.querySelector(selector).innerText || null
+  [_buildData] (type, offset, date = null) {
+    const now = date || new Date()
 
-      // TODO: Load more events. Need to simulate a virtual scrolldown.
+    return [{
+      'operationName': 'EventsPage_EventScheduleQuery',
+      'variables': {
+        'channelLogin': this.username,
+        'limit': offset,
+        'before': type === 'past' ? now : null,
+        'after': type === 'global' ? now : null,
+        'sortOrder': "DESC",
+        'following': true
+      },
+      'extensions': {
+        'persistedQuery': {
+          'version': 1,
+          'sha256Hash': '1ddc422675ea9d6e7659d54923633fede3a804bfec3b20e3df6ef8eea40d3ea1'
+        }
+      }
+    }]
+  }
 
-      selectedEvents.forEach((selectedEvent) => {
-        const [streamer, game] = innerSelector(selectedEvent, ':nth-child(3n)').split(/ streaming /)
-        formatedEvents.push({
-          link: selectedEvent.querySelector(':nth-child(1n)').href,
-          title: innerSelector(selectedEvent, ':nth-child(1n) h4'),
-          date: innerSelector(selectedEvent, ':nth-child(2n)'),
-          game,
-          streamer
+  /**
+   * Private method to exec https.post request.
+   * @private
+   * @param {object} options - The request options.
+   * @param {object} data - The request post data.
+   * @returns {Promise} The request response.
+   */
+  [_post] (options, data) {
+    return new Promise((resolve, reject) => {
+      const request = https.request(options, (res) => {
+        if (res.statusCode !== 200) {
+          reject(res)
+          return
+        }
+
+        res.setEncoding('utf8')
+
+        let result = ''
+
+        res.on('data', (chunk) => {
+          result += chunk
+        })
+
+        res.on('end', () => {
+          resolve(JSON.parse(result))
         })
       })
-      return formatedEvents
-    }, offset)
+
+      request.on('error', (err) => {
+        reject(err)
+      })
+
+      request.write(JSON.stringify(data))
+      request.end()
+    })
   }
 
   /**
-   * Internal private method used to extract description from linked event page (DOM scrapping).
-   * @param {Page} page - Representing puppeteer page instance.
-   * @returns {Promise<object>} Representing the event description.
+   * Private method to handle post request response.
+   * @private
+   * @param {object} requestResponse - The request response.
+   * @returns {Promise} If resolved, formatted events response, else request error. 
    */
-  _extractDescription (page) {
-    return page.evaluate(() => {
-      const description = document.querySelector('.events-landing-collection__main-col')
-        ? document.querySelector('.events-landing-collection__main-col .tw-elevation-2 p span').innerText || null
-        : document.querySelector('.simplebar-scroll-content .tw-flex-grow-1 p span').innerText || null
-      return description
+  [_handleResponse] (requestResponse) {
+    return new Promise((resolve, reject) => {
+      if (requestResponse.errors && requestResponse.errors.length > 0) {
+        reject(requestResponse)
+      } else {
+        resolve(this[_formatResponseAsEvents](requestResponse))
+      }
     })
+  }
+
+  /**
+   * Private method to format request response.
+   * @private
+   * @param {Array} events - The array includes events list.
+   * @returns {Array} The formatted events list.
+   */
+  [_formatResponseAsEvents] (events) {
+    const formatted = []
+
+    events.shift().data.user.eventLeaves.edges.forEach((event) => {
+      event = event.node
+
+      formatted.push({
+        id: event.id,
+        title: event.title,
+        game: event.game.displayName,
+        streamer: event.channel.displayName,
+        startAt: new Date(event.startAt),
+        endAt: new Date(event.endAt),
+      })
+    })
+
+    return formatted
   }
 }
 
