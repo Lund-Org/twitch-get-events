@@ -33,10 +33,11 @@ const testProperties = function (ev) {
 
 const testsEvents = function (events, hasDescription = false) {
   assert.isTrue(Array.isArray(events.data))
-  events.data.forEach((ev) => {
-    assert.isFalse(testProperties(ev))
-  })
-  // TODO: Check description
+  events.data.forEach((ev) => assert.isFalse(testProperties(ev)))
+
+  if (hasDescription) {
+    events.data.forEach((ev) => assert.isTrue(ev.hasOwnProperty('description')))
+  }
 }
 
 const twitchEvent = new TwitchEvent('heyyiw4txxbrmypyhje24wehmw0qw5', 'lundprod')

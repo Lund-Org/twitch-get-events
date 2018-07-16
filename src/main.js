@@ -3,7 +3,8 @@ const https = require('https')
 // Privates symbols declaration.
 const _getEvents = Symbol('getEvents')
 const _buildOptions = Symbol('buildOptions')
-const _buildData = Symbol('buildData')
+const _buildEventData = Symbol('buildEventData')
+const _buildDescriptionData = Symbol('buildDescriptionData')
 const _post = Symbol('post')
 const _handleResponse = Symbol('handleResponse')
 const _formatResponseAsEvents = Symbol('formatResponseAsEvents')
@@ -66,7 +67,7 @@ class TwitchEvent {
 
       let iterator
       let options
-      let data
+      let eventData
       let requestResponse
       let formatted
 
@@ -77,17 +78,32 @@ class TwitchEvent {
         count = count - iterator
 
         options = this[_buildOptions]()
-        data = this[_buildData](
+
+        eventData = this[_buildEventData](
           type,
           iterator,
           list.length > 0 ? list[list.length - 1].startAt : null
         )
 
-        requestResponse = await this[_post](options, data)
+        requestResponse = await this[_post](options, eventData)
         formatted = await this[_handleResponse](requestResponse)
 
         list = list.concat(formatted)
       } while (count !== 0)
+
+      // If we need event description, we need to send a second request.
+      if (hasDescription) {
+        let descriptionData = []
+        let eventIndex
+
+        list.forEach((event) => descriptionData.push(this[_buildDescriptionData](event.id)))
+        const descriptions = await this[_post](options, descriptionData)
+
+        for (let i = 0; i < descriptions.length; ++i) {
+          eventIndex = list.findIndex((event) => descriptions[i].data.event.id === event.id)
+          list[eventIndex].description = descriptions[i].data.event.description
+        }
+      }
 
       return {
         status: 'success',
@@ -133,14 +149,14 @@ class TwitchEvent {
    * @param {null|date} [date=null] - The events date limit.
    * @returns {object} The builded data object.
    */
-  [_buildData] (type, offset, date = null) {
+  [_buildEventData] (type, offset, date = null) {
     const now = date || new Date()
 
     return [{
       'operationName': 'EventsPage_EventScheduleQuery',
       'variables': {
         'channelLogin': this.username,
-        'limit': offset,
+        'limit': typeof offset === 'string' ? parseInt(offset) : offset,
         'before': type === 'past' ? now : null,
         'after': type === 'global' ? now : null,
         'sortOrder': 'DESC',
@@ -153,6 +169,21 @@ class TwitchEvent {
         }
       }
     }]
+  }
+
+  [_buildDescriptionData] (eventId) {
+    return {
+      'operationName': 'EventLandingPage_Event',
+      'variables': {
+        'eventName': eventId
+      },
+      'extensions': {
+        'persistedQuery': {
+          'version': 1,
+          'sha256Hash': '4fdc0f4f963f4b9ca046a0638dd5f96643708f49e129d437e48efb8d521cbaa4'
+        }
+      }
+    }
   }
 
   /**
