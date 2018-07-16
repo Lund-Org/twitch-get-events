@@ -62,7 +62,7 @@ class TwitchEvent {
 
       const limit = 100
       let list = []
-      let count = new Number(offset)
+      let count = Number(offset)
 
       let iterator
       let options
@@ -94,7 +94,12 @@ class TwitchEvent {
         data: list
       }
     } catch (err) {
-      console.error(err)
+      if (err.constructor.name === 'IncomingMessage') {
+        console.error('You probably use an invalid client-id. Please check it.')
+      } else {
+        console.error(err)
+      }
+
       return {
         status: 'error',
         errors: err
@@ -138,7 +143,7 @@ class TwitchEvent {
         'limit': offset,
         'before': type === 'past' ? now : null,
         'after': type === 'global' ? now : null,
-        'sortOrder': "DESC",
+        'sortOrder': 'DESC',
         'following': true
       },
       'extensions': {
@@ -191,7 +196,7 @@ class TwitchEvent {
    * Private method to handle post request response.
    * @private
    * @param {object} requestResponse - The request response.
-   * @returns {Promise} If resolved, formatted events response, else request error. 
+   * @returns {Promise} If resolved, formatted events response, else request error.
    */
   [_handleResponse] (requestResponse) {
     return new Promise((resolve, reject) => {
@@ -221,7 +226,7 @@ class TwitchEvent {
         game: event.game.displayName,
         streamer: event.channel.displayName,
         startAt: new Date(event.startAt),
-        endAt: new Date(event.endAt),
+        endAt: new Date(event.endAt)
       })
     })
 
