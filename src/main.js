@@ -62,11 +62,11 @@ class TwitchEvent {
       offset = offset || 20
 
       const limit = 100
+      const options = this[_buildOptions]()
       let list = []
       let count = Number(offset)
 
       let iterator
-      let options
       let eventData
       let requestResponse
       let formatted
@@ -76,8 +76,6 @@ class TwitchEvent {
         iterator = offset > limit ? limit : offset
         iterator = iterator > count ? count : iterator
         count = count - iterator
-
-        options = this[_buildOptions]()
 
         eventData = this[_buildEventData](
           type,
@@ -94,6 +92,7 @@ class TwitchEvent {
       // If we need event description, we need to send a second request.
       if (hasDescription) {
         let descriptionData = []
+
         let eventIndex
 
         list.forEach((event) => descriptionData.push(this[_buildDescriptionData](event.id)))
