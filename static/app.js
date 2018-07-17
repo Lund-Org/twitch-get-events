@@ -18,7 +18,7 @@ server.route({
       encodeURIComponent(request.params.clientId),
       encodeURIComponent(request.params.username)
     )
-    return await twitchEvent.getGlobalEvents(
+    return twitchEvent.getGlobalEvents(
       typeof request.query.description !== 'undefined' && request.query.description.toLowerCase() === 'y'
     )
   }
@@ -32,7 +32,7 @@ server.route({
       encodeURIComponent(request.params.clientId),
       encodeURIComponent(request.params.username)
     )
-    return await twitchEvent.getPastEvents(
+    return twitchEvent.getPastEvents(
       typeof request.query.offset === 'string' && request.query.offset.match(/[0-9]+/)
         ? request.query.offset
         : null,
