@@ -1,6 +1,7 @@
 # TwitchGetEvents
 [![Build Status](https://travis-ci.org/Lund-Org/twitch-get-events.svg?branch=master)](https://travis-ci.org/Lund-Org/twitch-get-events)
-The module to get the events of a Twitch channel ('cause there is no API for it)
+
+The module to get the events of a Twitch channel ('cause there is no doc for it)
 
 ## :fast_forward: Getting Started
 
@@ -18,6 +19,8 @@ If you don't have Docker, you need `node >= 9` and `npm >= 6`
 
 - [Docker](https://www.docker.com/)
 - [Node & npm](https://nodejs.org/en/)
+
+You need a "client-id" from twitch too. To achieve it, you need to create an application [here](https://glass.twitch.tv/console/apps), then when you want to manage it, you will find a client identifier.
 
 ### :arrow_forward: Installing
 
@@ -40,7 +43,6 @@ For Node/Npm users :
       npm install
       npm run dev
 
-:warning: **CAREFUL, THE LOCAL MODE DOESN'T WORK ON WINDOWS** (puppeteer errors :sob: )
 
 ## :arrows_counterclockwise: Running the tests
 
@@ -64,12 +66,12 @@ For Node/Npm users :
 
 ## :arrow_up: Deployment
 
-The package will be available on npm, need a link
+The package is build by Travis and is available [here](https://www.npmjs.com/package/@lund-org/twitch-events)
 
 ## :arrow_heading_down: Built With
 
-* [Puppeteer](https://github.com/GoogleChrome/puppeteer) - Headless Chrome Node API
 * [Hapi](https://github.com/hapijs/hapi) (for demo purpose) - Server Framework for Node.js
+* [Twith GQL API](https://dev.twitch.tv/) - The twitch dev portal
 
 ## :cool: Contributing
 
