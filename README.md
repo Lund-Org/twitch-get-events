@@ -1,5 +1,6 @@
 # TwitchGetEvents
 [![Build Status](https://travis-ci.org/Lund-Org/twitch-get-events.svg?branch=master)](https://travis-ci.org/Lund-Org/twitch-get-events)
+
 The module to get the events of a Twitch channel ('cause there is no doc for it)
 
 ## :fast_forward: Getting Started
@@ -65,7 +66,7 @@ For Node/Npm users :
 
 ## :arrow_up: Deployment
 
-The package will be available on npm, need a link
+The package is build by Travis and is available [here](https://www.npmjs.com/package/@lund-org/twitch-events)
 
 ## :arrow_heading_down: Built With
 
