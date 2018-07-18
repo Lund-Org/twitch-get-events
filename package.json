@@ -1,6 +1,6 @@
 {
   "name": "@lund-org/twitch-events",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Retrieve the events from a Twitch Channel",
   "main": "./static/app.js",
   "scripts": {
@@ -25,10 +25,6 @@
     "access": "public"
   },
   "license": "MIT",
-  "dependencies": {
-    "babel-polyfill": "^6.26.0",
-    "puppeteer": "^1.4.0"
-  },
   "devDependencies": {
     "chai": "^4.1.2",
     "docdash": "^0.4.0",
