@@ -246,8 +246,13 @@ class TwitchEvent {
    */
   [_formatResponseAsEvents] (events) {
     const formatted = []
+    const eventData = events.shift().data
 
-    events.shift().data.user.eventLeaves.edges.forEach((event) => {
+    if (typeof eventData.user === 'undefined') {
+      return formatted
+    }
+
+    eventData.user.eventLeaves.edges.forEach((event) => {
       event = event.node
 
       formatted.push({
