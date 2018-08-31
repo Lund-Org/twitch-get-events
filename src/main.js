@@ -237,7 +237,7 @@ class TwitchEvent {
    */
   [_handleResponse] (requestResponse) {
     return new Promise((resolve, reject) => {
-      if (requestResponse.errors && Object.bind.keys(requestResponse.errors).length > 0) {
+      if (requestResponse.errors && requestResponse.errors.length > 0) {
         reject(requestResponse)
       } else {
         resolve(this[_formatResponseAsEvents](requestResponse))
