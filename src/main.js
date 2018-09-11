@@ -86,14 +86,21 @@ class TwitchEvent {
         requestResponse = await this[_post](options, eventData)
         formatted = await this[_handleResponse](requestResponse)
 
+        if (typeof formatted === 'undefined') {
+          return {
+            status: 'success',
+            message: 'No user found!',
+            data: null
+          }
+        }
+
         list = list.concat(formatted)
       } while (count !== 0)
 
       // If we need event description, we need to send a second request.
       if (hasDescription) {
-        let descriptionData = []
-
         let eventIndex
+        let descriptionData = []
 
         list.forEach((event) => descriptionData.push(this[_buildDescriptionData](event.id)))
         const descriptions = await this[_post](options, descriptionData)
@@ -241,13 +248,18 @@ class TwitchEvent {
   /**
    * Private method to format request response.
    * @private
-   * @param {Array} events - The array includes events list.
-   * @returns {Array} The formatted events list.
+   * @param {Array} response - The request response.
+   * @returns {undefined, Array.<object>} The formatted events list.
    */
-  [_formatResponseAsEvents] (events) {
+  [_formatResponseAsEvents] (response) {
     const formatted = []
+    const user = response[0].data.user
 
-    events.shift().data.user.eventLeaves.edges.forEach((event) => {
+    if (!user.id) {
+      return undefined
+    }
+
+    user.eventLeaves.edges.forEach((event) => {
       event = event.node
 
       formatted.push({
