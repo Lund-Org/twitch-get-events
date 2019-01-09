@@ -4,21 +4,18 @@
   "description": "Retrieve the events from a Twitch Channel",
   "main": "./src/main.js",
   "scripts": {
-    "docker": "docker-compose -f etc/docker/docker-compose.yml up --build dev",
-    "windocker": "docker-compose.exe -f etc/docker/docker-compose.yml up --build dev",
-    "start": "node ./static/app.js",
-    "dev": "supervisor ./static/app.js",
     "lint": "eslint --ext .js src --ext .js test/specs",
     "pretest": "npm run lint",
     "test": "nyc mocha",
-    "dockertest": "docker-compose -f etc/docker/docker-compose.yml up --build test",
-    "windockertest": "docker-compose.exe -f etc/docker/docker-compose.yml up --build test",
     "doc": "./node_modules/.bin/jsdoc ./src -c ./.jsdoc.conf"
   },
   "author": "LundOrg",
   "repository": {
     "type": "git",
     "url": "https://github.com/Lund-Org/twitch-get-events.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Lund-Org/twitch-get-events/issues"
   },
   "publishConfig": {
     "access": "public"
@@ -36,7 +33,6 @@
     "eslint-plugin-node": "^6.0.1",
     "eslint-plugin-promise": "^3.8.0",
     "eslint-plugin-standard": "^3.1.0",
-    "hapi": "^17.8.1",
     "istanbul": "^0.4.5",
     "jsdoc": "3.5.5",
     "mocha": "^5.2.0",

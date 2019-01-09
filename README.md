@@ -1,66 +1,47 @@
-# TwitchGetEvents
-[![Build Status](https://travis-ci.org/Lund-Org/twitch-get-events.svg?branch=master)](https://travis-ci.org/Lund-Org/twitch-get-events)
+<h1 align="center"><p>twitch-get-events</p></h1>
+<p align="center">
+  <a alt="Npm version" href="https://www.npmjs.com/package/twitch-get-events">
+    <img src="https://img.shields.io/npm/v/twitch-get-events.svg" />
+  </a>
+  <a alt="Build Status" href="https://travis-ci.com/lund-org/twitch-get-events">
+    <img src="https://travis-ci.com/lund-org/twitch-get-events.svg?branch=master" />
+  </a>
+  <a alt="Dependencies" href="https://github.com/lund-org/twitch-get-events/blob/master/package.json">
+    <img src="https://img.shields.io/david/lund-org/twitch-get-events.svg" />
+  </a>
+  <a alt="Coverage" href="https://codeclimate.com/github/lund-org/twitch-get-events/test_coverage">
+    <img src="https://api.codeclimate.com/v1/badges/??/test_coverage" />
+  </a>
+  <a alt="Maintainability" href="https://codeclimate.com/github/lund-org/twitch-get-events/maintainability">
+    <img src="https://api.codeclimate.com/v1/badges/??/maintainability" />
+  </a>
+</p>
 
 The module to get the events of a Twitch channel ('cause there is no doc for it)
 
 ## :fast_forward: Getting Started
 
+Install with npm :
+
+      npm install --save @lund-org/twitch-get-events
+
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
 [Link to the documentation](https://lund-org.github.io/twitch-get-events/index.html)
 
-You can find an example of http integration in the static folder.
-It's also what is launched when you test the module.
-
 ### :new: Prerequisites
 
-If you have **Docker**, you don't need anything on your computer.
-If you don't have Docker, you need `node >= 9` and `npm >= 6`
+The minimum version if NodeJS to use `twitch-get-events` is `>= 8`.
 
-- [Docker](https://www.docker.com/)
 - [Node & npm](https://nodejs.org/en/)
 
 You need a "client-id" from twitch too. To achieve it, you need to create an application [here](https://glass.twitch.tv/console/apps), then when you want to manage it, you will find a client identifier.
 
-### :arrow_forward: Installing
-
-For Docker users :
-
-      # If you're an Unix user and you have npm
-      npm run docker
-
-      # If you're an Unix user and you don't have npm
-      docker-compose -f etc/docker/docker-compose.yml up --build dev
-
-      # If you're a Windows user and you have npm
-      npm run windocker
-
-      # If you're a Windows user and you don't have npm
-      docker-compose.exe -f etc/docker/docker-compose.yml up --build dev
+## :arrows_counterclockwise: Running the tests
 
 For Node/Npm users :
 
       npm install
-      npm run dev
-
-
-## :arrows_counterclockwise: Running the tests
-
-For Docker users :
-
-      # If you're an Unix user and you have npm
-      npm run dockertest
-
-      # If you're an Unix user and you don't have npm
-      docker-compose -f etc/docker/docker-compose.yml up --build test
-
-      # If you're a Windows user and you have npm
-      npm run windockertest
-
-      # If you're a Windows user and you don't have npm
-      docker-compose.exe -f etc/docker/docker-compose.yml up --build test
-
-For Node/Npm users :
 
       npm run test
 
@@ -70,7 +51,6 @@ The package is build by Travis and is available [here](https://www.npmjs.com/pac
 
 ## :arrow_heading_down: Built With
 
-* [Hapi](https://github.com/hapijs/hapi) (for demo purpose) - Server Framework for Node.js
 * [Twith GQL API](https://dev.twitch.tv/) - The twitch dev portal
 
 ## :cool: Contributing
