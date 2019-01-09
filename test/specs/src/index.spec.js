@@ -1,6 +1,6 @@
 /* eslint no-unused-expressions: 0 */
 
-const TwitchEvents = require(path.resolve(__root, './src/main.js'))
+const TwitchEvents = require(path.resolve(__root, './src/index.js'))
 const {
   IS_DONE,
   IS_FAIL,
@@ -128,7 +128,7 @@ describe('TwitchEvents getNextEvents()', () => {
 })
 
 describe('TwitchEvents getGlobalEvents() (depreciation) (alias of getNextEvents())', () => {
-  it('work fine and return a fullified response when user is found and has events', () => {
+  it('work fine and return a fullified response when user is found and has events', async () => {
     try {
       const twitchEvents = new TwitchEvents(TWITCH_TOKEN)
       const response = await twitchEvents.getGlobalEvents(TWITCH_USERNAME)

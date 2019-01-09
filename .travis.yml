@@ -15,7 +15,7 @@ before_script:
 after_script:
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
 stages:
-  - name: tests
+  - name: test
   - name: npm release
     if: tag =~ /^\d+\.\d+\.\d+[a-z-]*$/
 jobs:

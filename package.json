@@ -2,7 +2,7 @@
   "name": "@lund-org/twitch-events",
   "version": "1.1.1",
   "description": "Retrieve the events from a Twitch Channel",
-  "main": "./src/main.js",
+  "main": "./src/index.js",
   "scripts": {
     "lint": "eslint --ext .js src --ext .js test/specs",
     "pretest": "npm run lint",
