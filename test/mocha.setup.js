@@ -11,7 +11,7 @@ if (!process.env.CI) {
         [name]: value
       }))
   } catch (err) {
-    console.error('Can\'t load .env file.', err)
+    console.error('Can not load .env file.', err)
   }
 }
 

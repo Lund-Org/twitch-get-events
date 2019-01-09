@@ -10,6 +10,7 @@ module.exports = {
   },
   globals: {
     __root: true,
+    path: true,
     assert: true,
     expect: true,
     should: true

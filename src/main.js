@@ -10,54 +10,61 @@ const _handleResponse = Symbol('handleResponse')
 const _formatResponseAsEvents = Symbol('formatResponseAsEvents')
 
 /**
- * Class TwitchEvent.
- * @class TwitchEvent
+ * Class TwitchEvents.
+ * @class TwitchEvents
  */
-class TwitchEvent {
+class TwitchEvents {
+  /**
+   * Static method to use as class builder alternative.
+   * @param {string} clientId - The API twitch clientID.
+   * @returns {TwitchEvents} New instance.
+   */
+  static init (clientId) {
+    return new TwitchEvents(clientId)
+  }
+
   /**
    * Class constructor.
    * @param {string} clientId - The API twitch clientID.
-   * @param {string} username - The twitch username.
    */
-  constructor (clientId, username) {
+  constructor (clientId) {
     if (typeof clientId !== 'string') {
       throw new Error('Error while trying to instanciate TwitchEvent class, "clientId" parameter should be string.')
     }
-    if (typeof username !== 'string') {
-      throw new Error('Error while trying to instanciate TwitchEvent class, "username" parameter should be string.')
-    }
     this.clientId = clientId
-    this.username = username
   }
 
   /**
    * Method used to extract globals events from twitch user.
+   * @param {string} username - The twitch username.
    * @param {boolean} [hasDescription=false] - The event description extraction state.
    * @returns {Array} The globals events list.
    */
-  getGlobalEvents (hasDescription = false) {
-    return this[_getEvents]('global', 100, hasDescription)
+  getGlobalEvents (username, hasDescription = false) {
+    return this[_getEvents](username, 'global', 100, hasDescription)
   }
 
   /**
    * Method used to extract past events from twitch user.
+   * @param {string} username - The twitch username.
    * @param {null|number} [offset=null] - The number of events needed.
    * @param {boolean} [hasDescription=false] - The event description extraction state.
    * @returns {Array} The past events list.
    */
-  getPastEvents (offset = null, hasDescription = false) {
-    return this[_getEvents]('past', offset, hasDescription)
+  getPastEvents (username, offset = null, hasDescription = false) {
+    return this[_getEvents](username, 'past', offset, hasDescription)
   }
 
   /**
    * Internal private method used to get needed events.
    * @private
+   * @param {string} username - The twitch username.
    * @param {string} type - The events type, can be "past" or "global".
    * @param {null|number} offset - The number of events needed.
    * @param {boolean} hasDescription - The event description extraction state.
    * @returns {Array} The events list.
    */
-  async [_getEvents] (type, offset, hasDescription) {
+  async [_getEvents] (username, type, offset, hasDescription) {
     try {
       offset = offset || 20
 
@@ -78,6 +85,7 @@ class TwitchEvent {
         count = count - iterator
 
         eventData = this[_buildEventData](
+          username,
           type,
           iterator,
           list.length > 0 ? list[list.length - 1].startAt : null
@@ -150,18 +158,19 @@ class TwitchEvent {
   /**
    * Private method to build an data object to pass to the request (post).
    * @private
+   * @param {string} username - The twitch username.
    * @param {string} type - Event type, "past" or "global".
    * @param {number} offset - Number of events needed.
    * @param {null|date} [date=null] - The events date limit.
    * @returns {object} The builded data object.
    */
-  [_buildEventData] (type, offset, date = null) {
+  [_buildEventData] (username, type, offset, date = null) {
     const now = date || new Date()
 
     return [{
       'operationName': 'EventsPage_EventScheduleQuery',
       'variables': {
-        'channelLogin': this.username,
+        'channelLogin': username,
         'limit': typeof offset === 'string' ? parseInt(offset) : offset,
         'before': type === 'past' ? now : null,
         'after': type === 'global' ? now : null,
@@ -276,4 +285,4 @@ class TwitchEvent {
   }
 }
 
-module.exports = TwitchEvent
+module.exports = TwitchEvents
