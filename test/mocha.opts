@@ -1,3 +1,6 @@
+--require ./test/mocha.setup.js
+--globals global
 --colors
 --sort
-test/specs/**/*.spec.js
+--recursive
+test/specs/{,**/}*spec.js

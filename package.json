@@ -9,9 +9,8 @@
     "start": "node ./static/app.js",
     "dev": "supervisor ./static/app.js",
     "lint": "eslint --ext .js src --ext .js test/specs",
-    "build": "echo 'todo'",
     "pretest": "npm run lint",
-    "test": "mocha",
+    "test": "nyc mocha",
     "dockertest": "docker-compose -f etc/docker/docker-compose.yml up --build test",
     "windockertest": "docker-compose.exe -f etc/docker/docker-compose.yml up --build test",
     "doc": "./node_modules/.bin/jsdoc ./src -c ./.jsdoc.conf"
@@ -25,22 +24,23 @@
     "access": "public"
   },
   "license": "MIT",
+  "engines": {
+    "node": ">= 8.0.0"
+  },
   "devDependencies": {
-    "chai": "^4.1.2",
+    "chai": "^4.2.0",
     "docdash": "^0.4.0",
     "eslint": "^4.19.1",
     "eslint-config-standard": "^11.0.0",
-    "eslint-plugin-import": "^2.12.0",
+    "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-node": "^6.0.1",
     "eslint-plugin-promise": "^3.8.0",
     "eslint-plugin-standard": "^3.1.0",
-    "hapi": "^17.5.1",
+    "hapi": "^17.8.1",
+    "istanbul": "^0.4.5",
     "jsdoc": "3.5.5",
     "mocha": "^5.2.0",
+    "nyc": "^13.1.0",
     "supervisor": "^0.12.0"
-  },
-  "engines": {
-    "node": ">= 9.11.0",
-    "npm": ">= 5.8.0"
   }
 }

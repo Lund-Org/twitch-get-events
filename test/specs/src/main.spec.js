@@ -1,7 +1,8 @@
-/* global describe it */
 /* eslint valid-typeof: 0 */
-const assert = require('chai').assert
 const TwitchEvent = require('../../../src/main.js')
+
+const TWITCH_TOKEN = process.env.TWITCH_TOKEN || ''
+const TWITCH_USERNAME = process.env.TWITCH_USERNAME || ''
 
 const expectedEvents = [
   { name: 'id', type: 'string', required: true },
@@ -40,7 +41,7 @@ const testsEvents = function (events, hasDescription = false) {
   }
 }
 
-const twitchEvent = new TwitchEvent('heyyiw4txxbrmypyhje24wehmw0qw5', 'lundprod')
+const twitchEvent = new TwitchEvent(TWITCH_TOKEN, TWITCH_USERNAME)
 
 describe('Public : TwitchEvent class validity tests', function () {
   it('Test Public: TwitchEvent.getGlobalEvents(false)', async function () {
