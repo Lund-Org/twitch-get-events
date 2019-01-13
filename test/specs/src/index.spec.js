@@ -17,9 +17,10 @@ const SHOULD_NOT_NEXT = 'This test should not continue...'
 function checkDoneResponse (res) {
   expect(res).to.have.property('state', IS_DONE)
   expect(res).to.have.not.property('error')
-  expect(res).to.have.property('data')
-  expect(res.data).to.be.an('array').to.not.be.empty
-  const event = res.data.shift()
+  expect(res).to.have.property('events')
+  expect(res.events).to.be.an('array').to.not.be.empty
+
+  const event = res.events.shift()
   expect(event).to.be.an('object').to.not.be.empty
   expect(event).to.have.property('id').to.be.a('string').to.not.be.empty
   expect(event).to.have.property('title').to.be.a('string').to.not.be.empty
@@ -27,22 +28,21 @@ function checkDoneResponse (res) {
   expect(event).to.have.property('endAt').to.be.a('date')
   expect(event).to.have.property('game').to.be.a('string').to.not.be.empty
   expect(event).to.have.property('streamer').to.be.a('string').to.not.be.empty
+
   return event
 }
 
 function checkDoneEmptyResponse (res) {
   expect(res).to.have.property('state', IS_DONE)
   expect(res).to.have.not.property('error')
-  expect(res).to.have.property('data')
-  expect(res.data).to.be.an('array').to.be.empty
+  expect(res).to.have.property('events')
+  expect(res.events).to.be.an('array').to.be.empty
 }
 
 function checkFailResponse (res, code) {
   expect(res).to.have.property('state', IS_FAIL)
   expect(res).to.have.property('code', code)
   expect(res).to.have.not.property('error')
-  expect(res).to.have.property('data')
-  expect(res.data).to.be.an('array').to.be.empty
 }
 
 // function checkErrorResponse (err, code) {
@@ -52,6 +52,26 @@ function checkFailResponse (res, code) {
 //   expect(err).to.have.property('details')
 //   expect(err.details).to.not.to.be.empty
 // }
+
+describe('TwitchEvents ::init()', () => {
+  it('throw an TypeError when the "clientId" argument is not type string', () => {
+    try {
+      const twitchEvents = TwitchEvents.init({ state: 'object' })
+      assert.fail(SHOULD_NOT_NEXT, twitchEvents)
+    } catch (err) {
+      expect(err).to.be.an.instanceOf(TypeError)
+    }
+  })
+
+  it('work fine when the "clientId" argument is provided as string', () => {
+    try {
+      const twitchEvents = TwitchEvents.init('string')
+      expect(twitchEvents.clientId).to.be.a('string').to.not.be.empty
+    } catch (err) {
+      assert.fail(SHOULD_NOT_THROW, err)
+    }
+  })
+})
 
 describe('TwitchEvents constructor()', () => {
   it('throw an TypeError when the "clientId" argument is not type string', () => {
@@ -88,8 +108,7 @@ describe('TwitchEvents getNextEvents()', () => {
     try {
       const twitchEvents = new TwitchEvents(TWITCH_TOKEN)
       const response = await twitchEvents.getNextEvents(TWITCH_USERNAME)
-      const event = await checkDoneResponse(response)
-      expect(event).to.have.property('description', null)
+      await checkDoneResponse(response)
     } catch (err) {
       assert.fail(SHOULD_NOT_THROW, err)
     }
@@ -154,8 +173,7 @@ describe('TwitchEvents getPastEvents()', () => {
     try {
       const twitchEvents = new TwitchEvents(TWITCH_TOKEN)
       const response = await twitchEvents.getPastEvents(TWITCH_USERNAME)
-      const event = await checkDoneResponse(response)
-      expect(event).to.have.property('description', null)
+      await checkDoneResponse(response)
     } catch (err) {
       assert.fail(SHOULD_NOT_THROW, err)
     }
@@ -177,6 +195,16 @@ describe('TwitchEvents getPastEvents()', () => {
       const twitchEvents = new TwitchEvents(TWITCH_TOKEN)
       const response = await twitchEvents.getPastEvents(TWITCH_USERNAME_EMPTY)
       await checkDoneEmptyResponse(response)
+    } catch (err) {
+      assert.fail(SHOULD_NOT_THROW, err)
+    }
+  })
+
+  it('work fine and return a IS_DONE state response when user has large amount of events', async () => {
+    try {
+      const twitchEvents = new TwitchEvents(TWITCH_TOKEN)
+      const response = await twitchEvents.getPastEvents(TWITCH_USERNAME, false, 210)
+      await checkDoneResponse(response)
     } catch (err) {
       assert.fail(SHOULD_NOT_THROW, err)
     }

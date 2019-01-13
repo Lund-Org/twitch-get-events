@@ -1,6 +1,5 @@
 const utils = require('./utils.js')
 const requests = require('./requests.js')
-const { isString } = require('./sugars.js')
 const { ModuleError } = require('./errors.js')
 const {
   IS_DONE,
@@ -35,7 +34,7 @@ class TwitchEvents {
    * @throws {TypeError} Invalid client ID
    */
   constructor (clientId) {
-    if (!isString(clientId)) {
+    if (typeof clientId !== 'string') {
       throw new TypeError('The "clientId" argument must be type string.')
     }
     this.clientId = clientId
@@ -182,17 +181,17 @@ class TwitchEvents {
    * @param {string} username - The twitch username.
    * @param {string} type - Event type, 'past' or 'global'.
    * @param {number} offset - Number of events needed.
-   * @param {null|date} [date=null] - The date limit.
+   * @param {null|date} date - The date limit.
    * @returns {object} The builded data object.
    */
-  _makeRequestEventData (username, type, offset, date = null) {
+  _makeRequestEventData (username, type, offset, date) {
     const now = date || new Date()
 
     return [{
       operationName: 'EventsPage_EventScheduleQuery',
       variables: {
         channelLogin: username,
-        limit: isString(offset) ? parseInt(offset) : offset,
+        limit: offset,
         before: type === EVENTS_PAST ? now : null,
         after: type === EVENTS_GLOBAL ? now : null,
         sortOrder: 'DESC',
