@@ -10,10 +10,10 @@
     <img src="https://img.shields.io/david/lund-org/twitch-get-events.svg" />
   </a>
   <a alt="Coverage" href="https://codeclimate.com/github/lund-org/twitch-get-events/test_coverage">
-    <img src="https://api.codeclimate.com/v1/badges/??/test_coverage" />
+    <img src="https://api.codeclimate.com/v1/badges/ae1f2d4ef820b5797908/test_coverage" />
   </a>
   <a alt="Maintainability" href="https://codeclimate.com/github/lund-org/twitch-get-events/maintainability">
-    <img src="https://api.codeclimate.com/v1/badges/??/maintainability" />
+    <img src="https://api.codeclimate.com/v1/badges/ae1f2d4ef820b5797908/maintainability" />
   </a>
 </p>
 
