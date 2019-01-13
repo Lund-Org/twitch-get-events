@@ -151,7 +151,8 @@ class TwitchEvents {
    */
   async _post (options, data) {
     try {
-      return await requests.post(options, data)
+      const response = await requests.post(options, data)
+      return response
     } catch (err) {
       throw new ModuleError(ERROR_MESSAGE_DEFAULT, ERROR_REQUEST, err)
     }
