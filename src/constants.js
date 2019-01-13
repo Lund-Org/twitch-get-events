@@ -17,7 +17,6 @@ const EVENTS_PAST = 'EVENTS_PAST'
 const TWITCH_HASH_EVENT = '1ddc422675ea9d6e7659d54923633fede3a804bfec3b20e3df6ef8eea40d3ea1'
 const TWITCH_HASH_DESC = '4fdc0f4f963f4b9ca046a0638dd5f96643708f49e129d437e48efb8d521cbaa4'
 
-
 module.exports = {
   IS_DONE,
   IS_FAIL,
@@ -28,5 +27,5 @@ module.exports = {
   EVENTS_GLOBAL,
   EVENTS_PAST,
   TWITCH_HASH_EVENT,
-  TWITCH_HASH_DESC,
+  TWITCH_HASH_DESC
 }

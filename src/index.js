@@ -248,7 +248,7 @@ class TwitchEvents {
     }
 
     const user = requestResponse.shift().data.user
-    
+
     if (!user.id) {
       return {
         state: IS_FAIL,
