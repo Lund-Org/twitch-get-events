@@ -58,6 +58,9 @@ class TwitchEvents {
    * @returns {object}
    */
   getGlobalEvents (username, hasDescription = false) {
+    console.warn(
+      'DeprecationWarning: The method "getGlobalEvents" is depreciated, use "getNextEvents" instead.'
+    )
     return this._getEvents(username, EVENTS_GLOBAL, hasDescription, 100)
   }
 
