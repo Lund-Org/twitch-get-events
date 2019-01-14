@@ -12,12 +12,12 @@ function post (options, data) {
       res.setEncoding('utf8')
       res.chunks = []
       res.on('data', res.chunks.push.bind(res.chunks))
-      res.once('end', () => {
+      res.on('end', () => {
         res.parsedData = JSON.parse(res.chunks.join(''))
         res.statusCode !== 200 ? reject(res.parsedData) : resolve(res.parsedData)
       })
     })
-    request.once('error', reject)
+    request.on('error', reject)
     request.write(JSON.stringify(data))
     request.end()
   })
