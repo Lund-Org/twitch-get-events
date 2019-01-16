@@ -4,7 +4,7 @@ const https = require('https')
  * HTTPS post request.
  * @param {object} options - The request options.
  * @param {object} data - The request post data.
- * @returns {Promise<TypeError,object>}
+ * @returns {Promise<object>}
  */
 function post (options, data) {
   return new Promise((resolve, reject) => {

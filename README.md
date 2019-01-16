@@ -1,18 +1,18 @@
-<h1 align="center"><p>twitch-get-events</p></h1>
+<h1 align="center"><p>twitch-events</p></h1>
 <p align="center">
-  <a alt="Npm version" href="https://www.npmjs.com/package/twitch-get-events">
-    <img src="https://img.shields.io/npm/v/twitch-get-events.svg" />
+  <a alt="Npm version" href="https://www.npmjs.com/package/@lund-org/twitch-events">
+    <img src="https://img.shields.io/npm/v/@lund-org/twitch-events.svg" />
   </a>
-  <a alt="Build Status" href="https://travis-ci.com/lund-org/twitch-get-events">
-    <img src="https://travis-ci.com/lund-org/twitch-get-events.svg?branch=master" />
+  <a alt="Build Status" href="https://travis-ci.org/Lund-Org/twitch-get-events">
+    <img src="https://travis-ci.org/Lund-Org/twitch-get-events.svg?branch=master" />
   </a>
   <a alt="Dependencies" href="https://github.com/lund-org/twitch-get-events/blob/master/package.json">
     <img src="https://img.shields.io/david/lund-org/twitch-get-events.svg" />
   </a>
-  <a alt="Coverage" href="https://codeclimate.com/github/lund-org/twitch-get-events/test_coverage">
+  <a alt="Coverage" href="https://codeclimate.com/github/Lund-Org/twitch-get-events/test_coverage">
     <img src="https://api.codeclimate.com/v1/badges/ae1f2d4ef820b5797908/test_coverage" />
   </a>
-  <a alt="Maintainability" href="https://codeclimate.com/github/lund-org/twitch-get-events/maintainability">
+  <a alt="Maintainability" href="https://codeclimate.com/github/Lund-Org/twitch-get-events/maintainability">
     <img src="https://api.codeclimate.com/v1/badges/ae1f2d4ef820b5797908/maintainability" />
   </a>
 </p>
@@ -23,7 +23,7 @@ The module to get the events of a Twitch channel ('cause there is no doc for it)
 
 Install with npm :
 
-      npm install --save @lund-org/twitch-get-events
+      npm install --save @lund-org/twitch-events
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
@@ -31,7 +31,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### :new: Prerequisites
 
-The minimum version if NodeJS to use `twitch-get-events` is `>= 8`.
+The minimum version if NodeJS to use `twitch-events` is `>= 8`.
 
 - [Node & npm](https://nodejs.org/en/)
 
