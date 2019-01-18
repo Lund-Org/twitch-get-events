@@ -4,7 +4,10 @@ const TwitchEvents = require(path.resolve(__root, './src/index.js'))
 const {
   IS_DONE,
   IS_FAIL,
-  USER_NOT_FOUND
+  USER_NOT_FOUND,
+  ERROR_REQUEST,
+  ERROR_PROCESS,
+  EVENTS_PAST
 } = require(path.resolve(__root, './src/constants.js'))
 
 const TWITCH_TOKEN = process.env.TWITCH_TOKEN
@@ -45,13 +48,11 @@ function checkFailResponse (res, code) {
   expect(res).to.have.not.property('error')
 }
 
-// function checkErrorResponse (err, code) {
-//   expect(err).to.have.property('state', IS_ERR)
-//   expect(res).to.have.property('code', code)
-//   expect(err).to.have.not.property('data')
-//   expect(err).to.have.property('details')
-//   expect(err.details).to.not.to.be.empty
-// }
+function checkErrorResponse (err, code) {
+  expect(err).to.have.property('code', code)
+  expect(err).to.have.property('details')
+  expect(err.details).to.not.to.be.empty
+}
 
 describe('TwitchEvents ::init()', () => {
   it('throw an TypeError when the "clientId" argument is not type string', () => {
@@ -93,21 +94,21 @@ describe('TwitchEvents constructor()', () => {
   })
 })
 
-describe('TwitchEvents getNextEvents()', () => {
-  // it('reject an error object with state IS_ERR and code REQUEST_ERROR', async () => {
-  //   try {
-  //     const twitchEvents = new TwitchEvents(TWITCH_TOKEN)
-  //     const response = await twitchEvents.getNextEvents(TWITCH_USERNAME)
-  //     assert.fail(SHOULD_NOT_NEXT, response)
-  //   } catch (err) {
-  //     await checkErrorResponse(err, REQUEST_ERROR)
-  //   }
-  // })
+describe('TwitchEvents getUpcomingEvents()', () => {
+  it('reject an error object with code ERROR_REQUEST', async () => {
+    try {
+      const twitchEvents = new TwitchEvents('INVALID_TOKEN')
+      const response = await twitchEvents.getUpcomingEvents(TWITCH_USERNAME)
+      assert.fail(SHOULD_NOT_NEXT, response)
+    } catch (err) {
+      await checkErrorResponse(err, ERROR_REQUEST)
+    }
+  })
 
   it('work fine and return a IS_DONE state response when user has events', async () => {
     try {
       const twitchEvents = new TwitchEvents(TWITCH_TOKEN)
-      const response = await twitchEvents.getNextEvents(TWITCH_USERNAME)
+      const response = await twitchEvents.getUpcomingEvents(TWITCH_USERNAME)
       await checkDoneResponse(response)
     } catch (err) {
       assert.fail(SHOULD_NOT_THROW, err)
@@ -117,7 +118,7 @@ describe('TwitchEvents getNextEvents()', () => {
   it('work fine and return a IS_DONE state response when event has description', async () => {
     try {
       const twitchEvents = new TwitchEvents(TWITCH_TOKEN)
-      const response = await twitchEvents.getNextEvents(TWITCH_USERNAME, true)
+      const response = await twitchEvents.getUpcomingEvents(TWITCH_USERNAME, true)
       const event = await checkDoneResponse(response)
       expect(event).to.have.property('description').to.be.a('string')
     } catch (err) {
@@ -128,7 +129,7 @@ describe('TwitchEvents getNextEvents()', () => {
   it('work fine and return a IS_DONE state response when user has not events', async () => {
     try {
       const twitchEvents = new TwitchEvents(TWITCH_TOKEN)
-      const response = await twitchEvents.getNextEvents(TWITCH_USERNAME_EMPTY)
+      const response = await twitchEvents.getUpcomingEvents(TWITCH_USERNAME_EMPTY)
       await checkDoneEmptyResponse(response)
     } catch (err) {
       assert.fail(SHOULD_NOT_THROW, err)
@@ -138,7 +139,7 @@ describe('TwitchEvents getNextEvents()', () => {
   it('work fine and return a IS_FAIL state and USER_NOT_FOUND code response', async () => {
     try {
       const twitchEvents = new TwitchEvents(TWITCH_TOKEN)
-      const response = await twitchEvents.getNextEvents(TWITCH_USERNAME_NOT_FOUND)
+      const response = await twitchEvents.getUpcomingEvents(TWITCH_USERNAME_NOT_FOUND)
       await checkFailResponse(response, USER_NOT_FOUND)
     } catch (err) {
       assert.fail(SHOULD_NOT_THROW, err)
@@ -146,12 +147,12 @@ describe('TwitchEvents getNextEvents()', () => {
   })
 })
 
-describe('TwitchEvents getGlobalEvents() (depreciation) (alias of getNextEvents())', () => {
+describe('TwitchEvents getGlobalEvents() (depreciation) (alias of getUpcomingEvents())', () => {
   it('work fine and return a fullified response when user is found and has events', async () => {
     try {
       const twitchEvents = new TwitchEvents(TWITCH_TOKEN)
       const response = await twitchEvents.getGlobalEvents(TWITCH_USERNAME)
-      await checkDoneResponse(response)
+      await checkDoneResponse(response, ERROR_REQUEST)
     } catch (err) {
       assert.fail(SHOULD_NOT_THROW, err)
     }
@@ -159,15 +160,25 @@ describe('TwitchEvents getGlobalEvents() (depreciation) (alias of getNextEvents(
 })
 
 describe('TwitchEvents getPastEvents()', () => {
-  // it('reject an error object with state IS_ERR and code REQUEST_ERROR', async () => {
-  //   try {
-  //     const twitchEvents = new TwitchEvents(TWITCH_TOKEN)
-  //     const response = await twitchEvents.getPastEvents(TWITCH_USERNAME)
-  //     assert.fail(SHOULD_NOT_NEXT, response)
-  //   } catch (err) {
-  //     await checkErrorResponse(err, REQUEST_ERROR)
-  //   }
-  // })
+  it('reject an error when "username" is false boolean', async () => {
+    try {
+      const twitchEvents = new TwitchEvents(TWITCH_TOKEN)
+      const response = await twitchEvents.getPastEvents(false, 'is-string')
+      assert.fail(SHOULD_NOT_NEXT, response)
+    } catch (err) {
+      await checkErrorResponse(err, ERROR_PROCESS)
+    }
+  })
+
+  it('reject an error object with code ERROR_REQUEST when the twitch token is not valid', async () => {
+    try {
+      const twitchEvents = new TwitchEvents('INVALID_TOKEN')
+      const response = await twitchEvents.getPastEvents(TWITCH_USERNAME)
+      assert.fail(SHOULD_NOT_NEXT, response)
+    } catch (err) {
+      await checkErrorResponse(err, ERROR_REQUEST)
+    }
+  })
 
   it('work fine and return a IS_DONE state response when user has events', async () => {
     try {
@@ -217,6 +228,26 @@ describe('TwitchEvents getPastEvents()', () => {
       await checkFailResponse(response, USER_NOT_FOUND)
     } catch (err) {
       assert.fail(SHOULD_NOT_THROW, err)
+    }
+  })
+})
+
+describe('TwitchEvents _getEvents()', () => {
+  it('reject an error when the "offset" argument is not valid', async () => {
+    try {
+      const twitchEvents = new TwitchEvents(TWITCH_TOKEN)
+      const response = await twitchEvents._getEvents(
+        TWITCH_USERNAME,
+        EVENTS_PAST,
+        false,
+        'not-integer-format'
+      )
+      assert.fail(SHOULD_NOT_NEXT, response)
+    } catch (err) {
+      expect(err).to.have.property(
+        'message',
+        'The "offset" argument must be an integer or a string integer.'
+      )
     }
   })
 })

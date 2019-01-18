@@ -2,11 +2,12 @@ const https = require('https')
 
 /**
  * HTTPS post request.
+ * @async
  * @param {object} options - The request options.
  * @param {object} data - The request post data.
  * @returns {Promise<object>}
  */
-function post (options, data) {
+async function post (options, data) {
   return new Promise((resolve, reject) => {
     const request = https.request(options, (res) => {
       res.setEncoding('utf8')
@@ -14,7 +15,12 @@ function post (options, data) {
       res.on('data', res.chunks.push.bind(res.chunks))
       res.on('end', () => {
         res.parsedData = JSON.parse(res.chunks.join(''))
-        res.statusCode !== 200 ? reject(res.parsedData) : resolve(res.parsedData)
+
+        if (res.statusCode < 200 || res.statusCode >= 300) {
+          return reject(res.parsedData)
+        }
+
+        resolve(res.parsedData)
       })
     })
     request.on('error', reject)

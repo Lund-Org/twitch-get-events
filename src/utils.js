@@ -15,6 +15,18 @@ function prepareArrayWithOffset (offset, standard) {
     .concat(rest !== 0 ? [rest] : [])
 }
 
+/**
+ * Check if value is an integer or a string integer.
+ * @param {any} value - Tested value.
+ * @returns {boolean}
+ */
+function hasIntegerFormat (value) {
+  return typeof value === 'string'
+    ? value.match(/^\d+$/g) !== null
+    : Number.isInteger(value)
+}
+
 module.exports = {
-  prepareArrayWithOffset
+  prepareArrayWithOffset,
+  hasIntegerFormat
 }

@@ -46,20 +46,20 @@ class TwitchEvents {
    * @param {boolean} [hasDescription=false] - The event description extraction state.
    * @returns {object}
    */
-  getNextEvents (username, hasDescription = false) {
+  getUpcomingEvents (username, hasDescription = false) {
     return this._getEvents(username, EVENTS_GLOBAL, hasDescription, 100)
   }
 
   /**
    * Get coming events from twitch for an user.
-   * @description Alias of _getNextEvents()
+   * @description Alias of getUpcomingEvents()
    * @param {string} username - The twitch username.
    * @param {boolean} [hasDescription=false] - The event description extraction state.
    * @returns {object}
    */
   getGlobalEvents (username, hasDescription = false) {
     console.warn(
-      'DeprecationWarning: The method "getGlobalEvents" is depreciated, use "getNextEvents" instead.'
+      'DeprecationWarning: The method "getGlobalEvents" is depreciated, use "getUpcomingEvents" instead.'
     )
     return this._getEvents(username, EVENTS_GLOBAL, hasDescription, 100)
   }
@@ -83,9 +83,13 @@ class TwitchEvents {
    * @param {string} type - The events type, can be "past" or "global".
    * @param {number} offset - The number of events needed.
    * @param {boolean} hasDescription - The event description extraction state.
-   * @returns {Array} The events list.
+   * @returns {object} Response
    */
   async _getEvents (username, type, hasDescription, offset) {
+    if (!utils.hasIntegerFormat(offset)) {
+      throw new TypeError('The "offset" argument must be an integer or a string integer.')
+    }
+
     offset = Number(offset)
     const requestOptions = this._makeRequestOptions()
     const offsets = utils.prepareArrayWithOffset(offset, 100)
@@ -148,7 +152,7 @@ class TwitchEvents {
    * @private
    * @param {object} options - Request options.
    * @param {object} data - Request data.
-   * @returns {object|string} Request response.
+   * @returns {object} Request response.
    * @throws {ModuleError}
    */
   async _post (options, data) {
@@ -185,7 +189,7 @@ class TwitchEvents {
    * @param {string} type - Event type, 'past' or 'global'.
    * @param {number} offset - Number of events needed.
    * @param {null|date} date - The date limit.
-   * @returns {object} The builded data object.
+   * @returns {Array<object>} The builded data payload.
    */
   _makeRequestEventData (username, type, offset, date) {
     const now = date || new Date()
@@ -233,32 +237,31 @@ class TwitchEvents {
   /**
    * Method to handle post request response.
    * @private
-   * @param {object} requestResponse - The request response.
-   * @returns {Promise}
+   * @param {Array} requestResponse - The request response.
+   * @returns {object}
+   * @throws {ModuleError}
    */
   _handleResponse (requestResponse) {
-    if (requestResponse.errors && requestResponse.errors.length) {
+    const response = requestResponse.shift()
+
+    if (response.errors) {
       throw new ModuleError(
         ERROR_MESSAGE_DEFAULT,
         ERROR_PROCESS,
-        requestResponse.errors
+        response.errors
       )
     }
 
-    if (!requestResponse.length) {
-      return { events: [] }
-    }
-
-    const user = requestResponse.shift().data.user
-
-    if (!user.id) {
+    if (!response.data.user || !response.data.user.id) {
       return {
         state: IS_FAIL,
         code: USER_NOT_FOUND
       }
     }
 
-    return { events: this._formatEvents(user.eventLeaves.edges) }
+    return {
+      events: this._formatEvents(response.data.user.eventLeaves.edges)
+    }
   }
 
   /**
