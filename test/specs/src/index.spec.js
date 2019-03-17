@@ -6,7 +6,6 @@ const {
   IS_FAIL,
   USER_NOT_FOUND,
   ERROR_REQUEST,
-  ERROR_PROCESS,
   EVENTS_PAST
 } = require(path.resolve(__root, './src/constants.js'))
 
@@ -49,6 +48,7 @@ function checkFailResponse (res, code) {
 }
 
 function checkErrorResponse (err, code) {
+  // console.error(err, code)
   expect(err).to.have.property('code', code)
   expect(err).to.have.property('details')
   expect(err.details).to.not.to.be.empty
@@ -95,13 +95,13 @@ describe('TwitchEvents constructor()', () => {
 })
 
 describe('TwitchEvents getUpcomingEvents()', () => {
-  it('reject an error object with code ERROR_REQUEST', async () => {
+  it('work fine and return IS_FAIL state when the token is not valid', async () => {
     try {
       const twitchEvents = new TwitchEvents('INVALID_TOKEN')
       const response = await twitchEvents.getUpcomingEvents(TWITCH_USERNAME)
-      assert.fail(SHOULD_NOT_NEXT, response)
+      await checkFailResponse(response, ERROR_REQUEST)
     } catch (err) {
-      await checkErrorResponse(err, ERROR_REQUEST)
+      assert.fail(SHOULD_NOT_THROW, err)
     }
   })
 
@@ -160,23 +160,23 @@ describe('TwitchEvents getGlobalEvents() (depreciation) (alias of getUpcomingEve
 })
 
 describe('TwitchEvents getPastEvents()', () => {
-  it('reject an error when "username" is false boolean', async () => {
+  it('work fine and return error object when "username" is not found', async () => {
     try {
       const twitchEvents = new TwitchEvents(TWITCH_TOKEN)
       const response = await twitchEvents.getPastEvents(false, 'is-string')
-      assert.fail(SHOULD_NOT_NEXT, response)
+      await checkFailResponse(response, USER_NOT_FOUND)
     } catch (err) {
-      await checkErrorResponse(err, ERROR_PROCESS)
+      assert.fail(SHOULD_NOT_THROW, err)
     }
   })
 
-  it('reject an error object with code ERROR_REQUEST when the twitch token is not valid', async () => {
+  it('work fine and return object with code ERROR_REQUEST when the twitch token is not valid', async () => {
     try {
       const twitchEvents = new TwitchEvents('INVALID_TOKEN')
       const response = await twitchEvents.getPastEvents(TWITCH_USERNAME)
-      assert.fail(SHOULD_NOT_NEXT, response)
+      await checkErrorResponse(response, ERROR_REQUEST)
     } catch (err) {
-      await checkErrorResponse(err, ERROR_REQUEST)
+      assert.fail(SHOULD_NOT_THROW, err)
     }
   })
 
