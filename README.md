@@ -1,21 +1,13 @@
-<h1 align="center"><p>twitch-events</p></h1>
-<p align="center">
-  <a alt="Npm version" href="https://www.npmjs.com/package/@lund-org/twitch-events">
-    <img src="https://img.shields.io/npm/v/@lund-org/twitch-events.svg" />
-  </a>
-  <a alt="Build Status" href="https://travis-ci.org/Lund-Org/twitch-get-events">
-    <img src="https://travis-ci.org/Lund-Org/twitch-get-events.svg?branch=master" />
-  </a>
-  <a alt="Dependencies" href="https://github.com/lund-org/twitch-get-events/blob/master/package.json">
-    <img src="https://img.shields.io/david/lund-org/twitch-get-events.svg" />
-  </a>
-  <a alt="Coverage" href="https://codeclimate.com/github/Lund-Org/twitch-get-events/test_coverage">
-    <img src="https://api.codeclimate.com/v1/badges/ae1f2d4ef820b5797908/test_coverage" />
-  </a>
-  <a alt="Maintainability" href="https://codeclimate.com/github/Lund-Org/twitch-get-events/maintainability">
-    <img src="https://api.codeclimate.com/v1/badges/ae1f2d4ef820b5797908/maintainability" />
-  </a>
-</p>
+<h1 align="center"><p>twitch-get-events</p></h1>
+<center>
+
+  [![Build Status](https://travis-ci.org/Lund-Org/twitch-get-events.svg?branch=master)](https://travis-ci.org/Lund-Org/twitch-get-events)
+  [![Npm version](https://img.shields.io/npm/v/@lund-org/twitch-events.svg)](https://www.npmjs.com/package/@lund-org/twitch-events)
+  [![Dependencies](https://img.shields.io/david/lund-org/twitch-get-events.svg)](https://github.com/lund-org/twitch-get-events/blob/master/package.json)
+  [![Coverage](https://api.codeclimate.com/v1/badges/ae1f2d4ef820b5797908/test_coverage)](https://codeclimate.com/github/Lund-Org/twitch-get-events/test_coverage)
+  [![Maintainability](https://api.codeclimate.com/v1/badges/ae1f2d4ef820b5797908/maintainability)](https://codeclimate.com/github/Lund-Org/twitch-get-events/maintainability)
+
+</center>
 
 The module to get the events of a Twitch channel ('cause there is no doc for it)
 
@@ -29,13 +21,39 @@ These instructions will get you a copy of the project up and running on your loc
 
 [Link to the documentation](https://lund-org.github.io/twitch-get-events/index.html)
 
+You can find an example of http integration in the static folder.	
+It's also what is launched when you test the module.
+
 ### :new: Prerequisites
 
-The minimum version if NodeJS to use `twitch-events` is `>= 8`.
+If you have **Docker**, you don't need anything on your computer.
+If you don't have Docker, you need `node >= 9` and `npm >= 6`.
 
+- [Docker](https://www.docker.com/)
 - [Node & npm](https://nodejs.org/en/)
 
 You need a "client-id" from twitch too. To achieve it, you need to create an application [here](https://glass.twitch.tv/console/apps), then when you want to manage it, you will find a client identifier.
+
+### :arrow_forward: Installing
+
+For Docker users :
+
+      # If you're an Unix user and you have npm
+      npm run docker
+
+      # If you're an Unix user and you don't have npm
+      docker-compose -f etc/docker/docker-compose.yml up --build dev
+
+      # If you're a Windows user and you have npm
+      npm run windocker
+
+      # If you're a Windows user and you don't have npm
+      docker-compose.exe -f etc/docker/docker-compose.yml up --build dev
+
+For Node/Npm users :
+
+      npm install
+      npm run dev
 
 ## :arrows_counterclockwise: Running the tests
 
