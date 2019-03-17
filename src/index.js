@@ -6,7 +6,6 @@ const {
   IS_FAIL,
   USER_NOT_FOUND,
   ERROR_REQUEST,
-  ERROR_PROCESS,
   ERROR_MESSAGE_DEFAULT,
   EVENTS_GLOBAL,
   EVENTS_PAST,
@@ -96,9 +95,22 @@ class TwitchEvents {
     const events = []
 
     for (const eventCount of offsets) {
+      let requestResponse
       const startAt = events.length ? events[events.length - 1].startAt : null
       const requestData = this._makeRequestEventData(username, type, eventCount, startAt)
-      const requestResponse = await this._post(requestOptions, requestData)
+      try {
+        requestResponse = await this._post(requestOptions, requestData)
+      } catch (err) {
+        if (err.details.error === 'Bad Request') {
+          return {
+            state: IS_FAIL,
+            code: ERROR_REQUEST,
+            details: err.details
+          }
+        }
+        throw err
+      }
+
       const requestParsed = this._handleResponse(requestResponse)
 
       if (!('events' in requestParsed)) {
@@ -243,14 +255,6 @@ class TwitchEvents {
    */
   _handleResponse (requestResponse) {
     const response = requestResponse.shift()
-
-    if (response.errors) {
-      throw new ModuleError(
-        ERROR_MESSAGE_DEFAULT,
-        ERROR_PROCESS,
-        response.errors
-      )
-    }
 
     if (!response.data.user || !response.data.user.id) {
       return {
