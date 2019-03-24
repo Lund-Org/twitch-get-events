@@ -14,6 +14,8 @@ const ERROR_MESSAGE_DEFAULT = 'An error has been detected while trying to contac
 // GLOBALS
 const EVENTS_GLOBAL = 'EVENTS_GLOBALS'
 const EVENTS_PAST = 'EVENTS_PAST'
+
+const TWITCH_PUBLIC_CLIENT_ID = 'kimne78kx3ncx6brgo4mv6wki5h1ko'
 const TWITCH_HASH_EVENT = '1ddc422675ea9d6e7659d54923633fede3a804bfec3b20e3df6ef8eea40d3ea1'
 const TWITCH_HASH_DESC = '4fdc0f4f963f4b9ca046a0638dd5f96643708f49e129d437e48efb8d521cbaa4'
 
@@ -26,6 +28,7 @@ module.exports = {
   ERROR_MESSAGE_DEFAULT,
   EVENTS_GLOBAL,
   EVENTS_PAST,
+  TWITCH_PUBLIC_CLIENT_ID,
   TWITCH_HASH_EVENT,
   TWITCH_HASH_DESC
 }

@@ -9,6 +9,7 @@ const {
   ERROR_MESSAGE_DEFAULT,
   EVENTS_GLOBAL,
   EVENTS_PAST,
+  TWITCH_PUBLIC_CLIENT_ID,
   TWITCH_HASH_EVENT,
   TWITCH_HASH_DESC
 } = require('./constants.js')
@@ -20,23 +21,17 @@ const {
 class TwitchEvents {
   /**
    * Static method to use as class builder alternative.
-   * @param {string} clientId - The API twitch clientID.
    * @returns {TwitchEvents} New instance.
    */
-  static init (clientId) {
-    return new TwitchEvents(clientId)
+  static init () {
+    return new TwitchEvents()
   }
 
   /**
    * Class constructor.
-   * @param {string} clientId - The API twitch clientID.
-   * @throws {TypeError} Invalid client ID
    */
-  constructor (clientId) {
-    if (typeof clientId !== 'string') {
-      throw new TypeError('The "clientId" argument must be type string.')
-    }
-    this.clientId = clientId
+  constructor () {
+    this.clientId = TWITCH_PUBLIC_CLIENT_ID
   }
 
   /**
@@ -95,28 +90,13 @@ class TwitchEvents {
     const events = []
 
     for (const eventCount of offsets) {
-      let requestResponse
       const startAt = events.length ? events[events.length - 1].startAt : null
       const requestData = this._makeRequestEventData(username, type, eventCount, startAt)
-      try {
-        requestResponse = await this._post(requestOptions, requestData)
-      } catch (err) {
-        if (err.details.error === 'Bad Request') {
-          return {
-            state: IS_FAIL,
-            code: ERROR_REQUEST,
-            details: err.details
-          }
-        }
-        throw err
-      }
-
+      const requestResponse = await this._post(requestOptions, requestData)
       const requestParsed = this._handleResponse(requestResponse)
-
       if (!('events' in requestParsed)) {
         return requestParsed
       }
-
       events.push(...requestParsed.events)
     }
 
