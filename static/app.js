@@ -13,11 +13,10 @@ server.route({
   path: '/upcoming/{clientId}/{username}',
   handler: async (request, handler) => {
     try {
-      const clientId = encodeURIComponent(request.params.clientId)
       const username = encodeURIComponent(request.params.username)
       const desc = typeof request.query.description !== 'undefined' &&
         request.query.description.toLowerCase() === 'y'
-      const twitchEvent = await new TwitchEvents(clientId)
+      const twitchEvent = await new TwitchEvents()
       return twitchEvent.getUpcomingEvents(username, desc)
     } catch (err) {
       console.error(err)
@@ -29,9 +28,8 @@ server.route({
   method: 'GET',
   path: '/past/{clientId}/{username}',
   handler: async (request, handler) => {
-    const clientId = encodeURIComponent(request.params.clientId)
     const username = encodeURIComponent(request.params.username)
-    const twitchEvent = await new TwitchEvents(clientId)
+    const twitchEvent = await new TwitchEvents()
     const desc = typeof request.query.description !== 'undefined' &&
       request.query.description.toLowerCase() === 'y'
     const offset = typeof request.query.offset === 'string' && request.query.offset.match(/[0-9]+/)
