@@ -4,14 +4,14 @@ const fs = require('fs')
 
 if (!process.env.CI) {
   try {
-    const data = fs.readFileSync(path.resolve(__dirname, '../.env'), 'utf8')
-    data.split('\n')
+    fs.readFileSync(path.resolve(__dirname, '../.env'), 'utf8')
+      .split('\n')
       .map((line) => line.split('='))
       .forEach(([name, value]) => Object.assign(process.env, {
         [name]: value
       }))
   } catch (err) {
-    console.error('Can not load .env file.', err)
+    console.error('Can not load .env file.')
   }
 }
 
