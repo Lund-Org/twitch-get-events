@@ -67,6 +67,14 @@ For Node/Npm users :
 
 The package is build by Travis and is available [here](https://www.npmjs.com/package/@lund-org/twitch-events)
 
+## :wrench: Environment variables
+
+The environment variables are only used from tests.
+
+- `TWITCH_USERNAME`: Represent a twitch username who has provided incoming events.
+- `TWITCH_USERNAME_EMPTY`: Represent a twitch username who has never provided any event.  
+- `TWITCH_USERNAME_NOT_FOUND`: Represent a twitch username who's not found.
+
 ## :arrow_heading_down: Built With
 
 * [Twith GQL API](https://dev.twitch.tv/) - The twitch dev portal
