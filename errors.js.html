@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Home - Documentation</title>
+    <title>errors.js - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -27,25 +27,50 @@
 
 <div id="main">
     
+    <h1 class="page-title">errors.js</h1>
+    
 
     
 
 
 
     
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/**
+ * Class ModuleError.
+ * @extends {Error}
+ */
+class ModuleError extends Error {
+  /**
+   * Class constructor.
+   * @param {Error|string} err Error or message.
+   * @param {undefined|string} code - Error code.
+   * @param {undefined|object} details - Error details.
+   */
+  constructor (err, code, details) {
+    if (err instanceof Error) {
+      super(err.message)
+      this.stack = err.stack
+    } else {
+      super(err)
+      Error.captureStackTrace(this)
+    }
 
+    this.code = code || this.constructor.name
 
+    if (details) {
+      this.details = details
+    }
+  }
+}
 
-
-
-
-
-
-
-    
-
-
-
+module.exports = {
+  ModuleError
+}
+</code></pre>
+        </article>
+    </section>
 
 
 
