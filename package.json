@@ -1,6 +1,6 @@
 {
   "name": "@lund-org/twitch-events",
-  "version": "1.2.0",
+  "version": "2.0.0",
   "description": "Retrieve the events from a Twitch Channel",
   "main": "./src/index.js",
   "scripts": {
