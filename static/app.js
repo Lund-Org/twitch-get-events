@@ -10,7 +10,7 @@ const server = new Hapi.Server({
 
 server.route({
   method: 'GET',
-  path: '/upcoming/{clientId}/{username}',
+  path: '/upcoming/{username}',
   handler: async (request, handler) => {
     try {
       const username = encodeURIComponent(request.params.username)
@@ -26,7 +26,7 @@ server.route({
 
 server.route({
   method: 'GET',
-  path: '/past/{clientId}/{username}',
+  path: '/past/{username}',
   handler: async (request, handler) => {
     const username = encodeURIComponent(request.params.username)
     const twitchEvent = await new TwitchEvents()
@@ -34,7 +34,7 @@ server.route({
       request.query.description.toLowerCase() === 'y'
     const offset = typeof request.query.offset === 'string' && request.query.offset.match(/[0-9]+/)
       ? request.query.offset
-      : null
+      : 1
     return twitchEvent.getPastEvents(username, desc, offset)
   }
 })
