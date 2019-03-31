@@ -1,65 +1,55 @@
+// Example usage.
 const Hapi = require('hapi')
-const TwitchEvents = require('../src/main.js')
+const TwitchEvents = require('../src/index.js')
 
-let isRunning = false
-let callbackOnStart = () => {}
-
-const server = new Hapi.Server(Object.assign({
+const server = new Hapi.Server({
   host: '0.0.0.0',
   port: 3000,
   routes: { cors: true }
-}))
+})
 
 server.route({
   method: 'GET',
-  path: '/global/{clientId}/{username}',
+  path: '/upcoming/{username}',
   handler: async (request, handler) => {
-    const twitchEvent = await new TwitchEvents(
-      encodeURIComponent(request.params.clientId),
-      encodeURIComponent(request.params.username)
-    )
-    return twitchEvent.getGlobalEvents(
-      typeof request.query.description !== 'undefined' && request.query.description.toLowerCase() === 'y'
-    )
+    try {
+      const username = encodeURIComponent(request.params.username)
+      const desc = typeof request.query.description !== 'undefined' &&
+        request.query.description.toLowerCase() === 'y'
+      const offset = typeof request.query.offset === 'string' && request.query.offset.match(/[0-9]+/)
+        ? parseInt(request.query.offset)
+        : 0
+      const limit = typeof request.query.limit === 'string' && request.query.limit.match(/[0-9]+/)
+        ? parseInt(request.query.limit)
+        : 20
+      const twitchEvent = await new TwitchEvents()
+      return twitchEvent.getUpcomingEvents(username, desc, offset, limit)
+    } catch (err) {
+      console.error(err)
+    }
   }
 })
 
 server.route({
   method: 'GET',
-  path: '/past/{clientId}/{username}',
+  path: '/past/{username}',
   handler: async (request, handler) => {
-    const twitchEvent = await new TwitchEvents(
-      encodeURIComponent(request.params.clientId),
-      encodeURIComponent(request.params.username)
-    )
-    return twitchEvent.getPastEvents(
-      typeof request.query.offset === 'string' && request.query.offset.match(/[0-9]+/)
-        ? request.query.offset
-        : null,
-      typeof request.query.description !== 'undefined' && request.query.description.toLowerCase() === 'y'
-    )
+    const username = encodeURIComponent(request.params.username)
+    const twitchEvent = await new TwitchEvents()
+    const desc = typeof request.query.description !== 'undefined' &&
+      request.query.description.toLowerCase() === 'y'
+    const offset = typeof request.query.offset === 'string' && request.query.offset.match(/[0-9]+/)
+      ? parseInt(request.query.offset)
+      : 0
+    const limit = typeof request.query.limit === 'string' && request.query.limit.match(/[0-9]+/)
+      ? parseInt(request.query.limit)
+      : 20
+    return twitchEvent.getPastEvents(username, desc, offset, limit)
   }
 })
 
 server.start().then(() => {
-  isRunning = true
-  callbackOnStart()
   console.log('It works ! Check it here : http://localhost:19900 (docker) or http://localhost:3000 (local)')
 }).catch((err) => {
-  isRunning = false
-  console.log('It failed !')
   console.log(err)
 })
-
-// For unit test purposes
-module.exports = {
-  isServerRunning: () => {
-    return isRunning
-  },
-  setCallbackOnStart: (method) => {
-    callbackOnStart = method
-  },
-  getServer: () => {
-    return server
-  }
-}

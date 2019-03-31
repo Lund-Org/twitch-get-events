@@ -4,7 +4,15 @@ module.exports = {
   plugins: [
     'standard', 'promise'
   ],
-  rules: {
-    'arrow-parens': 0
+  env: {
+    node: true,
+    mocha: true
+  },
+  globals: {
+    __root: true,
+    path: true,
+    assert: true,
+    expect: true,
+    should: true
   }
-};
+}

@@ -10,3 +10,4 @@ COPY ./.eslintrc.js /opt/app/
 RUN chmod a+x /var/scripts/*
 
 EXPOSE 3000
+

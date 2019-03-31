@@ -1,7 +1,7 @@
 version: '3'
 services:
   dev:
-    hostname: twitch-events
+    hostname: twitch-get-events
     build:
       context: ../..
       dockerfile: etc/docker/Dockerfile
@@ -14,12 +14,15 @@ services:
     command: "/var/scripts/watch.sh"
 
   test:
-    hostname: twitch-events
+    hostname: twitch-get-events
     build:
       context: ../..
       dockerfile: etc/docker/Dockerfile
+    env_file:
+      - ../../.env
     volumes:
-        - ../../src:/opt/app/src
-        - ../../static:/opt/app/static
-        - ../../test/:/opt/app/test
+      - ../../src:/opt/app/src
+      - ../../static:/opt/app/static
+      - ../../test/:/opt/app/test
     command: "/var/scripts/test.sh"
+
