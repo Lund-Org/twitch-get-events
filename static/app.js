@@ -16,8 +16,14 @@ server.route({
       const username = encodeURIComponent(request.params.username)
       const desc = typeof request.query.description !== 'undefined' &&
         request.query.description.toLowerCase() === 'y'
+      const offset = typeof request.query.offset === 'string' && request.query.offset.match(/[0-9]+/)
+        ? parseInt(request.query.offset)
+        : 0
+      const limit = typeof request.query.limit === 'string' && request.query.limit.match(/[0-9]+/)
+        ? parseInt(request.query.limit)
+        : 20
       const twitchEvent = await new TwitchEvents()
-      return twitchEvent.getUpcomingEvents(username, desc)
+      return twitchEvent.getUpcomingEvents(username, desc, offset, limit)
     } catch (err) {
       console.error(err)
     }
@@ -33,9 +39,12 @@ server.route({
     const desc = typeof request.query.description !== 'undefined' &&
       request.query.description.toLowerCase() === 'y'
     const offset = typeof request.query.offset === 'string' && request.query.offset.match(/[0-9]+/)
-      ? request.query.offset
-      : null
-    return twitchEvent.getPastEvents(username, desc, offset)
+      ? parseInt(request.query.offset)
+      : 0
+    const limit = typeof request.query.limit === 'string' && request.query.limit.match(/[0-9]+/)
+      ? parseInt(request.query.limit)
+      : 20
+    return twitchEvent.getPastEvents(username, desc, offset, limit)
   }
 })
 

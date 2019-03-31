@@ -168,7 +168,7 @@ describe('TwitchEvents getPastEvents()', () => {
   it('work fine and return a IS_DONE state response when user has large amount of events', async () => {
     try {
       const twitchEvents = new TwitchEvents()
-      const response = await twitchEvents.getPastEvents(TWITCH_USERNAME, false, 210)
+      const response = await twitchEvents.getPastEvents(TWITCH_USERNAME, false, 0, 210)
       await checkDoneResponse(response)
     } catch (err) {
       assert.fail(SHOULD_NOT_THROW, err)

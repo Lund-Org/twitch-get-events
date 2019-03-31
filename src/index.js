@@ -38,10 +38,12 @@ class TwitchEvents {
    * Get coming events from twitch for an user.
    * @param {string} username - The twitch username.
    * @param {boolean} [hasDescription=false] - The event description extraction state.
+   * @param {number} [offset=0] - The offset of the events.
+   * @param {number} [limit=20] - The number of events needed.
    * @returns {object}
    */
-  getUpcomingEvents (username, hasDescription = false) {
-    return this._getEvents(username, EVENTS_GLOBAL, hasDescription, 100)
+  getUpcomingEvents (username, hasDescription = false, offset = 0, limit = 20) {
+    return this._getEvents(username, EVENTS_GLOBAL, hasDescription, offset, limit)
   }
 
   /**
@@ -49,24 +51,27 @@ class TwitchEvents {
    * @description Alias of getUpcomingEvents()
    * @param {string} username - The twitch username.
    * @param {boolean} [hasDescription=false] - The event description extraction state.
+   * @param {number} [offset=0] - The offset of the events.
+   * @param {number} [limit=20] - The number of events needed.
    * @returns {object}
    */
-  getGlobalEvents (username, hasDescription = false) {
+  getGlobalEvents (username, hasDescription = false, offset = 0, limit = 20) {
     console.warn(
       'DeprecationWarning: The method "getGlobalEvents" is depreciated, use "getUpcomingEvents" instead.'
     )
-    return this._getEvents(username, EVENTS_GLOBAL, hasDescription, 100)
+    return this._getEvents(username, EVENTS_GLOBAL, hasDescription, offset, limit)
   }
 
   /**
    * Get past events from twitch for an user.
    * @param {string} username - The twitch username.
    * @param {boolean} [hasDescription=false] - The event description extraction state.
-   * @param {null|number} [offset=20] - The number of events needed.
+   * @param {number} [offset=0] - The offset of the events.
+   * @param {number} [limit=20] - The number of events needed.
    * @returns {object}
    */
-  getPastEvents (username, hasDescription = false, offset = 20) {
-    return this._getEvents(username, EVENTS_PAST, hasDescription, offset)
+  getPastEvents (username, hasDescription = false, offset = 0, limit = 20) {
+    return this._getEvents(username, EVENTS_PAST, hasDescription, offset, limit)
   }
 
   /**
@@ -79,25 +84,26 @@ class TwitchEvents {
    * @param {boolean} hasDescription - The event description extraction state.
    * @returns {object} Response
    */
-  async _getEvents (username, type, hasDescription, offset) {
+  async _getEvents (username, type, hasDescription, offset, limit) {
     if (!utils.hasIntegerFormat(offset)) {
       throw new TypeError('The "offset" argument must be an integer or a string integer.')
     }
 
     offset = Number(offset)
+    let tmpOffset = offset
     const requestOptions = this._makeRequestOptions()
-    const offsets = utils.prepareArrayWithOffset(offset, 100)
     const events = []
+    const limits = utils.prepareArrayWithOffset(limit, 100)
 
-    for (const eventCount of offsets) {
-      const startAt = events.length ? events[events.length - 1].startAt : null
-      const requestData = this._makeRequestEventData(username, type, eventCount, startAt)
+    for (const cutLimit of limits) {
+      const requestData = this._makeRequestEventData(username, type, tmpOffset, cutLimit)
       const requestResponse = await this._post(requestOptions, requestData)
       const requestParsed = this._handleResponse(requestResponse)
       if (!('events' in requestParsed)) {
         return requestParsed
       }
       events.push(...requestParsed.events)
+      tmpOffset += 100
     }
 
     if (hasDescription) {
@@ -183,14 +189,15 @@ class TwitchEvents {
    * @param {null|date} date - The date limit.
    * @returns {Array<object>} The builded data payload.
    */
-  _makeRequestEventData (username, type, offset, date) {
+  _makeRequestEventData (username, type, offset, limit, date = null) {
     const now = date || new Date()
 
     return [{
       operationName: 'EventsPage_EventScheduleQuery',
       variables: {
         channelLogin: username,
-        limit: offset,
+        cursor: offset.toString(),
+        limit: limit,
         before: type === EVENTS_PAST ? now : null,
         after: type === EVENTS_GLOBAL ? now : null,
         sortOrder: 'DESC',
