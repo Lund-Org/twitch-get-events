@@ -18,6 +18,8 @@ services:
     build:
       context: ../..
       dockerfile: etc/docker/Dockerfile
+    env_file:
+      - ../../.env
     volumes:
       - ../../src:/opt/app/src
       - ../../static:/opt/app/static
