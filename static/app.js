@@ -2,6 +2,7 @@
 const Hapi = require('hapi')
 const TwitchEvents = require('../src/index.js')
 
+const twitchEvent = new TwitchEvents()
 const server = new Hapi.Server({
   host: '0.0.0.0',
   port: 3000,
@@ -12,21 +13,9 @@ server.route({
   method: 'GET',
   path: '/upcoming/{username}',
   handler: async (request, handler) => {
-    try {
-      const username = encodeURIComponent(request.params.username)
-      const desc = typeof request.query.description !== 'undefined' &&
-        request.query.description.toLowerCase() === 'y'
-      const offset = typeof request.query.offset === 'string' && request.query.offset.match(/[0-9]+/)
-        ? parseInt(request.query.offset)
-        : 0
-      const limit = typeof request.query.limit === 'string' && request.query.limit.match(/[0-9]+/)
-        ? parseInt(request.query.limit)
-        : 20
-      const twitchEvent = await new TwitchEvents()
-      return twitchEvent.getUpcomingEvents(username, desc, offset, limit)
-    } catch (err) {
-      console.error(err)
-    }
+    const username = encodeURIComponent(request.params.username)
+    const { description, offset, limit } = getQueries(request.query)
+    return twitchEvent.getUpcomingEvents(username, description, offset, limit)
   }
 })
 
@@ -35,16 +24,8 @@ server.route({
   path: '/past/{username}',
   handler: async (request, handler) => {
     const username = encodeURIComponent(request.params.username)
-    const twitchEvent = await new TwitchEvents()
-    const desc = typeof request.query.description !== 'undefined' &&
-      request.query.description.toLowerCase() === 'y'
-    const offset = typeof request.query.offset === 'string' && request.query.offset.match(/[0-9]+/)
-      ? parseInt(request.query.offset)
-      : 0
-    const limit = typeof request.query.limit === 'string' && request.query.limit.match(/[0-9]+/)
-      ? parseInt(request.query.limit)
-      : 20
-    return twitchEvent.getPastEvents(username, desc, offset, limit)
+    const { description, offset, limit } = getQueries(request.query)
+    return twitchEvent.getPastEvents(username, description, offset, limit)
   }
 })
 
@@ -53,3 +34,11 @@ server.start().then(() => {
 }).catch((err) => {
   console.log(err)
 })
+
+function getQueries ({ description, offset, limit }) {
+  return {
+    description: typeof description !== 'undefined' && description.toLowerCase() === 'y',
+    offset: typeof offset === 'string' && offset.match(/[0-9]+/) ? parseInt(offset) : 0,
+    limit: typeof limit === 'string' && limit.match(/[0-9]+/) ? parseInt(limit) : 20
+  }
+}
