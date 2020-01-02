@@ -9,6 +9,12 @@
 
 </center>
 
+---
+
+# The feature has been removed from twitch, so this library is obsolete and dead
+
+---
+
 The module to get the events of a Twitch channel ('cause there is no doc for it)
 
 ## :fast_forward: Getting Started

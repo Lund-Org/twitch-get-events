@@ -10,7 +10,7 @@
     "dev": "supervisor ./static/app.js",
     "lint": "eslint --ext .js src --ext .js test/specs",
     "pretest": "npm run lint",
-    "test": "nyc mocha",
+    "test": "echo \"The test can't be run anymore because the service doesn't anymore\"",
     "dockertest": "docker-compose -f etc/docker/docker-compose.yml up --build test",
     "windockertest": "docker-compose.exe -f etc/docker/docker-compose.yml up --build test",
     "doc": "./node_modules/.bin/jsdoc ./src -c ./.jsdoc.conf"
@@ -32,17 +32,17 @@
   },
   "devDependencies": {
     "chai": "^4.2.0",
-    "docdash": "^0.4.0",
-    "eslint": "^4.19.1",
-    "eslint-config-standard": "^11.0.0",
-    "eslint-plugin-import": "^2.17.3",
-    "eslint-plugin-node": "^6.0.1",
-    "eslint-plugin-promise": "^3.8.0",
-    "eslint-plugin-standard": "^3.1.0",
-    "hapi": "^18.1.0",
+    "docdash": "^1.1.1",
+    "eslint": "^6.8.0",
+    "eslint-config-standard": "^14.1.0",
+    "eslint-plugin-import": "^2.19.1",
+    "eslint-plugin-node": "^11.0.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
+    "@hapi/hapi": "^18.4.0",
     "jsdoc": "^3.6.3",
-    "mocha": "^5.2.0",
-    "nyc": "^14.1.1",
+    "mocha": "^6.2.2",
+    "nyc": "^15.0.0",
     "supervisor": "^0.12.0"
   }
 }
