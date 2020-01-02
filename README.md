@@ -32,8 +32,6 @@ If you don't have Docker, you need `node >= 9` and `npm >= 6`.
 - [Docker](https://www.docker.com/)
 - [Node & npm](https://nodejs.org/en/)
 
-You need a "client-id" from twitch too. To achieve it, you need to create an application [here](https://glass.twitch.tv/console/apps), then when you want to manage it, you will find a client identifier.
-
 ### :arrow_forward: Installing
 
 For Docker users :
